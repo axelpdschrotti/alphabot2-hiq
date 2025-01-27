@@ -1,5 +1,6 @@
 import RPi.GPIO as GPIO
 import time
+import keyboard  # For keyboard input
 
 # Motor pins (BCM numbering)
 IN1 = 12    # Left motor forward
@@ -57,23 +58,28 @@ def stop():
     GPIO.output(IN3, GPIO.LOW)
     GPIO.output(IN4, GPIO.LOW)
 
-# Example usage
+# Control the robot using keyboard input
 try:
+    print("Use arrow keys to control the robot. Press 'q' to quit.")
     while True:
-        forward()
-        time.sleep(2)
-        turn_left()
-        time.sleep(1)
-        forward()
-        time.sleep(2)
-        turn_right()
-        time.sleep(1)
-        backward()
-        time.sleep(2)
-        stop()
-        time.sleep(1)
-        
+        if keyboard.is_pressed('up'):
+            forward()
+        elif keyboard.is_pressed('down'):
+            backward()
+        elif keyboard.is_pressed('left'):
+            turn_left()
+        elif keyboard.is_pressed('right'):
+            turn_right()
+        elif keyboard.is_pressed('q'):  # Exit the loop
+            break
+        else:
+            stop()
+        time.sleep(0.1)  # Add a small delay to avoid excessive CPU usage
+
 except KeyboardInterrupt:
+    print("\nExiting...")
+finally:
+    stop()
     pwm_left.stop()
     pwm_right.stop()
     GPIO.cleanup()
