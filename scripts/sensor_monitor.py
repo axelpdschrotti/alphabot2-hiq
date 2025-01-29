@@ -2,8 +2,8 @@ import RPi.GPIO as GPIO
 import time
 
 # IR sensor pins (BCM numbering)
-IR_LEFT = 19     # Left IR sensor
-IR_RIGHT = 16    # Right IR sensor
+IR_LEFT = 16     # Left IR sensor (swapped)
+IR_RIGHT = 19    # Right IR sensor (swapped)
 
 # Setup GPIO
 GPIO.setmode(GPIO.BCM)
