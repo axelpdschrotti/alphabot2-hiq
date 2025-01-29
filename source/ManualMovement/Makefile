@@ -1,6 +1,7 @@
 # Compiler
 CXX = g++
-CXXFLAGS = -Wall -lwiringPi
+CXXFLAGS = -Wall -I/usr/local/include
+LDFLAGS = -L/usr/local/lib -lwiringPi
 
 # Executable name
 TARGET = alphabot_control
