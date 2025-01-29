@@ -23,3 +23,6 @@ wiringPi
 iostream
 termios
 unistd
+
+If there is trouble when building the manual control executable for c++, try suing this: g++ -o alphabot_control main.cpp ManualMovement.cpp -I/usr/local/incl
+ude -L/usr/local/lib -lwiringPi
