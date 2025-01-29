@@ -1,19 +1,22 @@
 import RPi.GPIO as GPIO
 import time
+import threading
 
-# Pin configuration for AlphaBot2 motors
+# Motor and Sensor Pin Configuration
 IN1 = 13
 IN2 = 12
 ENA = 6
 IN3 = 21
 IN4 = 20
 ENB = 26
+IR_LEFT = 16
+IR_RIGHT = 19
 
-# GPIO setup
+# GPIO Initialization
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 
-# Setup motor control pins
+# Motor Pins Setup
 GPIO.setup(IN1, GPIO.OUT)
 GPIO.setup(IN2, GPIO.OUT)
 GPIO.setup(ENA, GPIO.OUT)
@@ -21,15 +24,18 @@ GPIO.setup(IN3, GPIO.OUT)
 GPIO.setup(IN4, GPIO.OUT)
 GPIO.setup(ENB, GPIO.OUT)
 
-# Initialize PWM for speed control
-pwmA = GPIO.PWM(ENA, 50)  # Left motor
-pwmB = GPIO.PWM(ENB, 50)  # Right motor
-speed = 30  # Initial speed (0-100, in percentage)
-pwmA.start(speed)  # Start with the defined speed
+# Sensor Pins Setup
+GPIO.setup(IR_LEFT, GPIO.IN)
+GPIO.setup(IR_RIGHT, GPIO.IN)
+
+# PWM Setup for Motors
+pwmA = GPIO.PWM(ENA, 50)
+pwmB = GPIO.PWM(ENB, 50)
+speed = 30
+pwmA.start(speed)
 pwmB.start(speed)
 
-
-# Movement functions
+# Movement Functions
 def move_forward():
     GPIO.output(IN1, GPIO.HIGH)
     GPIO.output(IN2, GPIO.LOW)
@@ -76,40 +82,54 @@ def decrease_speed():
         pwmB.ChangeDutyCycle(speed)
         print(f"Speed decreased to {speed}%")
 
-
-# Main loop for terminal input
-try:
-    print("Control the robot using these keys:")
-    print("w: forward, s: backward, a: left, d: right, q: stop, e: exit")
+# Sensor Monitoring Thread
+def check_sensors():
     while True:
-        command = input("Enter command: ").strip().lower()
-        if command == 'w':
+        left_detected = GPIO.input(IR_LEFT) == GPIO.LOW
+        right_detected = GPIO.input(IR_RIGHT) == GPIO.LOW
+        if left_detected or right_detected:
+            left_status = "Obstacle" if left_detected else "No Obstacle"
+            right_status = "Obstacle" if right_detected else "No Obstacle"
+            print(f"Left: {left_status}, Right: {right_status} - Emergency Stop!")
+            stop()
+        time.sleep(0.1)
+
+# Start Sensor Thread
+sensor_thread = threading.Thread(target=check_sensors, daemon=True)
+sensor_thread.start()
+
+# Main Control Loop
+try:
+    print("Control the robot with keys: w, a, s, d, q, +, -, e")
+    while True:
+        cmd = input("Enter command: ").strip().lower()
+        if cmd == 'w':
             print("Moving forward")
             move_forward()
-        elif command == 's':
+        elif cmd == 's':
             print("Moving backward")
             move_backward()
-        elif command == 'a':
+        elif cmd == 'a':
             print("Turning left")
             turn_left()
-        elif command == 'd':
+        elif cmd == 'd':
             print("Turning right")
             turn_right()
-        elif command == 'q':
+        elif cmd == 'q':
             print("Stopping")
             stop()
-        elif command == '+':
+        elif cmd == '+':
             increase_speed()
-        elif command == '-':
+        elif cmd == '-':
             decrease_speed()
-        elif command == 'e':
-            print("Exiting program")
+        elif cmd == 'e':
+            print("Exiting...")
             break
         else:
-            print("Unknown command. Please use w, a, s, d, q, or e.")
+            print("Unknown command")
         time.sleep(0.1)
 
 finally:
-    print("Cleaning up GPIO...")
     stop()
     GPIO.cleanup()
+    print("GPIO cleaned up.")
