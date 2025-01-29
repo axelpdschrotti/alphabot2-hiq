@@ -2,6 +2,7 @@
 #define MANMOVE_HPP
 
 #include <wiringPi.h>
+#include <softPwm.h>
 #include <iostream>
 #include <termios.h>
 #include <unistd.h>
