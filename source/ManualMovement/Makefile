@@ -6,7 +6,7 @@ CXXFLAGS = -Wall -lwiringPi
 TARGET = alphabot_control
 
 # Source files
-SRCS = main.cpp alphabot.cpp
+SRCS = main.cpp ManualMovement.cpp
 OBJS = $(SRCS:.cpp=.o)
 
 # Default rule

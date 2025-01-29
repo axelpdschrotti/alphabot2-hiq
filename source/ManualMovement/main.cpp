@@ -2,6 +2,7 @@
 
 int main() {
     ManualMovement robot;
+    wiringPiSetupGpio();
 
     std::cout << "Use 'w' for forward, 's' for backward, 'a' for left, 'd' for right, 'q' to stop, '+' to increase speed, '-' to decrease speed, and 'x' to exit." << std::endl;
 
