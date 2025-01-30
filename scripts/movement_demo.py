@@ -72,16 +72,24 @@ def stop():
 
 # New timed turn functions
 def turn_left_90():
+    pwmA.ChangeDutyCycle(20)
+    pwmB.ChangeDutyCycle(20)
     print("Turning 90° left")
     turn_left()
     time.sleep(TURN_90_TIME)
     stop()
+    pwmA.ChangeDutyCycle(speed)
+    pwmB.ChangeDutyCycle(speed)
 
 def turn_right_90():
+    pwmA.ChangeDutyCycle(20)
+    pwmB.ChangeDutyCycle(20)
     print("Turning 90° right")
     turn_right()
     time.sleep(TURN_90_TIME)
     stop()
+    pwmA.ChangeDutyCycle(speed)
+    pwmB.ChangeDutyCycle(speed)
 
 def turn_180():
     print("Turning 180°")
