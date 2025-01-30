@@ -14,7 +14,7 @@ IR_RIGHT = 19
 
 # Turn timing configuration (calibrate these values)
 TURN_90_TIME = 0.8    # Time needed for 90° turn at current speed
-TURN_180_TIME = 1.6   # Time needed for 180° turn (typically 2×90° time)
+TURN_180_TIME = 0.8   # Time needed for 180° turn (typically 2×90° time)
 
 # GPIO Initialization
 GPIO.setmode(GPIO.BCM)
@@ -72,8 +72,8 @@ def stop():
 
 # New timed turn functions
 def turn_left_90():
-    pwmA.ChangeDutyCycle(20)
-    pwmB.ChangeDutyCycle(20)
+    pwmA.ChangeDutyCycle(10)
+    pwmB.ChangeDutyCycle(10)
     print("Turning 90° left")
     turn_left()
     time.sleep(TURN_90_TIME)
@@ -82,8 +82,8 @@ def turn_left_90():
     pwmB.ChangeDutyCycle(speed)
 
 def turn_right_90():
-    pwmA.ChangeDutyCycle(20)
-    pwmB.ChangeDutyCycle(20)
+    pwmA.ChangeDutyCycle(10)
+    pwmB.ChangeDutyCycle(10)
     print("Turning 90° right")
     turn_right()
     time.sleep(TURN_90_TIME)
@@ -92,10 +92,14 @@ def turn_right_90():
     pwmB.ChangeDutyCycle(speed)
 
 def turn_180():
+    pwmA.ChangeDutyCycle(20)
+    pwmB.ChangeDutyCycle(20)
     print("Turning 180°")
     turn_left()  # Can be changed to turn_right() for right rotation
     time.sleep(TURN_180_TIME)
     stop()
+    pwmA.ChangeDutyCycle(speed)
+    pwmB.ChangeDutyCycle(speed)
 
 def increase_speed():
     global speed
