@@ -1,55 +1,29 @@
-#!/usr/bin/env python3
-import RPi.GPIO as GPIO
+#!/usr/bin/env python
 import time
+from Adafruit_PCA9685 import PCA9685
 
-# Configuration: Change these values as needed
-SERVO_PIN = 18       # GPIO pin connected to the servo's signal line
-FREQUENCY = 50       # Typical servo frequency (50Hz)
-FORWARD_ANGLE = 90   # Angle for "forward" position (center)
-UPWARD_ANGLE = 45    # Angle for "upward" position (adjust as needed)
+# Initialize the PCA9685 using its default address (0x40)
+pwm = PCA9685()
 
-# Setup GPIO
-GPIO.setmode(GPIO.BCM)
-GPIO.setwarnings(False)
-GPIO.setup(SERVO_PIN, GPIO.OUT)
+# Set the PWM frequency to 50hz, common for servos
+pwm.set_pwm_freq(50)
 
-# Initialize PWM on the servo pin
-pwm = GPIO.PWM(SERVO_PIN, FREQUENCY)
-pwm.start(0)
-time.sleep(1)  # Give some time for PWM to settle
-
-def set_servo_angle(angle):
+def set_servo_angle(channel, angle, pulse_min=150, pulse_max=600):
     """
-    Moves the servo to the specified angle.
-    The conversion from angle to duty cycle is based on the assumption that:
-       0° corresponds to ~2.5% duty cycle and 180° to ~12.5%.
-    Adjust the formula if your servo behaves differently.
+    Set a servo on the given channel to a specific angle (0-180 degrees).
+    pulse_min and pulse_max are the calibration values corresponding to 0° and 180°.
+    Adjust these values if your servo does not respond correctly.
     """
-    duty_cycle = (angle / 18.0) + 2.5
-    print(f"Setting servo to {angle}° (Duty Cycle: {duty_cycle}%)")
-    pwm.ChangeDutyCycle(duty_cycle)
-    time.sleep(0.5)  # Wait for the servo to reach the position
-    # Stopping the PWM signal can reduce servo jitter.
-    pwm.ChangeDutyCycle(0)
-    time.sleep(0.5)
+    # Calculate pulse length
+    pulse = int(pulse_min + (pulse_max - pulse_min) * angle / 180)
+    pwm.set_pwm(channel, 0, pulse)
 
-try:
-    # Set the camera to the forward position
-    print("Moving camera to forward position...")
-    set_servo_angle(FORWARD_ANGLE)
-    time.sleep(2)
-
-    # Now move the camera upward
-    print("Moving camera upward...")
-    set_servo_angle(UPWARD_ANGLE)
-    time.sleep(2)
-
-except KeyboardInterrupt:
-    print("Interrupted by user.")
-
-finally:
-    # Clean up the GPIO and stop PWM
-    print("Cleaning up GPIO...")
-    pwm.stop()
-    GPIO.cleanup()
-    print("Done.")
+if __name__ == '__main__':
+    # Set pan servo (channel 0) to 90 degrees for straight ahead.
+    set_servo_angle(0, 90)
+    
+    # Set tilt servo (channel 1) to 45 degrees for an upward tilt.
+    set_servo_angle(1, 45)
+    
+    # Allow time for the servos to move to the desired position.
+    time.sleep(1)
