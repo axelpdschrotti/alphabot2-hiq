@@ -118,8 +118,10 @@ try:
     while True:
         cmd = input("Enter command: ").strip().lower()
         if cmd == 'w':
+            start_distance_measurement()
             print("Step forward")
             step_forward()
+            stop_distance_measurement()
         elif cmd == 'a':
             print("Turning left")
             turn_left_90()
