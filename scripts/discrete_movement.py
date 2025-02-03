@@ -65,8 +65,8 @@ def stop():
     GPIO.output(IN4, GPIO.LOW)
 
 def step_forward():
-    pwmA.ChangeDutyCycle(30)
-    pwmB.ChangeDutyCycle(30)
+    pwmA.ChangeDutyCycle(25)
+    pwmB.ChangeDutyCycle(25)
     move_forward()
     time.sleep(MOVE_INCREMENT_TIME)
     stop()
