@@ -15,7 +15,7 @@ IR_RIGHT = 19
 # Turn timing configuration (calibrate these values)
 TURN_90_TIME = 0.4    # Time needed for 90° turn at current speed
 TURN_180_TIME = 0.8   # Time needed for 180° turn (typically 2×90° time)
-MOVE_INCREMENT_TIME = 0.5 #Time that wheels roll as it moves forward
+MOVE_INCREMENT_TIME = 2 #Time that wheels roll as it moves forward
 
 # GPIO Initialization
 GPIO.setmode(GPIO.BCM)
@@ -66,8 +66,8 @@ def stop():
     GPIO.output(IN4, GPIO.LOW)
 
 def step_forward():
-    pwmA.ChangeDutyCycle(20)
-    pwmB.ChangeDutyCycle(20)
+    pwmA.ChangeDutyCycle(10)
+    pwmB.ChangeDutyCycle(10)
     move_forward()
     time.sleep(MOVE_INCREMENT_TIME)
     stop()
