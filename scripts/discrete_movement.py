@@ -2,6 +2,7 @@ import RPi.GPIO as GPIO
 import time
 import threading
 import sys
+import math
 sys.path.append('../')
 import distance_measurement
 
