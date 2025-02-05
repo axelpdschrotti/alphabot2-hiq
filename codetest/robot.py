@@ -3,8 +3,6 @@ sys.path.append('../')
 
 
 class robot:
-
-    possible_directions = ['NORTH', 'SOUTH', 'EAST', 'WEST']
     position = [0, 0]
     direction = 'NORTH'
 
@@ -94,4 +92,6 @@ class robot:
         if move:
             move_forward()
 
-
+    
+    def report_virtual():
+        print("Currently at position x:" + position[0] + "\ny: " + position[1] + "\nFacing: " + direction)

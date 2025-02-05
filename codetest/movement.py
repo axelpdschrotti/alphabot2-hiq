@@ -43,11 +43,8 @@ class movement:
     GPIO.setup(IR_RIGHT, GPIO.IN)
 
     # PWM Setup for Motors
-    pwmA = GPIO.PWM(ENA, 50)
-    pwmB = GPIO.PWM(ENB, 50)
-    speed = 30
-    pwmA.start(speed)
-    pwmB.start(speed)
+    pwmA = GPIO.PWM(ENA, 10)
+    pwmB = GPIO.PWM(ENB, 10)
 
     # Movement Functions
     def move_forward():
@@ -76,8 +73,8 @@ class movement:
 
     def step_forward():
         start_distance_measurement()
-        pwmA.ChangeDutyCycle(30)
-        pwmB.ChangeDutyCycle(30)
+        pwmA.ChangeDutyCycle(10)
+        pwmB.ChangeDutyCycle(10)
         move_forward()
         time.sleep(MOVE_INCREMENT_TIME)
         stop()
@@ -92,8 +89,6 @@ class movement:
         turn_left()
         time.sleep(TURN_90_TIME)
         stop()
-        pwmA.ChangeDutyCycle(speed)
-        pwmB.ChangeDutyCycle(speed)
         stop_orientation_measurement()
 
     def turn_right_90():
@@ -104,8 +99,6 @@ class movement:
         turn_right()
         time.sleep(TURN_90_TIME)
         stop()
-        pwmA.ChangeDutyCycle(speed)
-        pwmB.ChangeDutyCycle(speed)
         stop_orientation_measurement()
 
     # Sensor Monitoring Thread
