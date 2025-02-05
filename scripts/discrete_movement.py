@@ -120,7 +120,7 @@ try:
     print("Control the robot with keys:")
     print("w: forward,a: left, d: right")
     print("q: stop, e: exit")
-    
+
     while True:
         cmd = input("Enter command: ").strip().lower()
         if cmd == 'w':
