@@ -8,6 +8,7 @@ ENCODER_RIGHT = 18
 # Wheel properties (adjust according to your AlphaBot2 wheel size)
 WHEEL_CIRCUMFERENCE = 13.2  # cm (example, adjust as needed)
 PULSES_PER_REV = 20  # Number of encoder pulses per wheel revolution
+D_TRACK = 9.8
 
 # Global variables to store encoder counts
 left_count = 0
