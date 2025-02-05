@@ -1,55 +1,96 @@
-#!/usr/bin/env python3
-import RPi.GPIO as GPIO
+#!/usr/bin/env python
 import time
+import RPi.GPIO as GPIO
 
-# Configuration: Change these values as needed
-SERVO_PIN = 18       # GPIO pin connected to the servo's signal line
-FREQUENCY = 50       # Typical servo frequency (50Hz)
-FORWARD_ANGLE = 90   # Angle for "forward" position (center)
-UPWARD_ANGLE = 45    # Angle for "upward" position (adjust as needed)
+# ----- Servo Output Setup -----
+# Choose GPIO pins for servo outputs:
+PAN_SERVO_PIN = 12   # Pan servo (horizontal)
+TILT_SERVO_PIN = 13  # Tilt servo (vertical)
 
-# Setup GPIO
+# Set the PWM frequency (50Hz is standard for servos)
+PWM_FREQ = 50
+
+# Initialize GPIO mode
 GPIO.setmode(GPIO.BCM)
-GPIO.setwarnings(False)
-GPIO.setup(SERVO_PIN, GPIO.OUT)
 
-# Initialize PWM on the servo pin
-pwm = GPIO.PWM(SERVO_PIN, FREQUENCY)
-pwm.start(0)
-time.sleep(1)  # Give some time for PWM to settle
+# Setup servo pins as output
+GPIO.setup(PAN_SERVO_PIN, GPIO.OUT)
+GPIO.setup(TILT_SERVO_PIN, GPIO.OUT)
 
-def set_servo_angle(angle):
-    """
-    Moves the servo to the specified angle.
-    The conversion from angle to duty cycle is based on the assumption that:
-       0° corresponds to ~2.5% duty cycle and 180° to ~12.5%.
-    Adjust the formula if your servo behaves differently.
-    """
-    duty_cycle = (angle / 18.0) + 2.5
-    print(f"Setting servo to {angle}° (Duty Cycle: {duty_cycle}%)")
-    pwm.ChangeDutyCycle(duty_cycle)
-    time.sleep(0.5)  # Wait for the servo to reach the position
-    # Stopping the PWM signal can reduce servo jitter.
-    pwm.ChangeDutyCycle(0)
-    time.sleep(0.5)
+# Create PWM instances on the servo pins
+pan_pwm = GPIO.PWM(PAN_SERVO_PIN, PWM_FREQ)
+tilt_pwm = GPIO.PWM(TILT_SERVO_PIN, PWM_FREQ)
+
+# Start PWM with an initial duty cycle corresponding to the desired angle.
+# We'll initialize pan at 90° (forward) and tilt at 45° (upwards).
+def angle_to_duty(angle):
+    """Convert an angle (0-180) to a duty cycle percentage."""
+    return (angle / 18.0) + 2.5
+
+pan_angle = 90   # initial horizontal angle (forward)
+tilt_angle = 45  # initial vertical angle (upward)
+
+pan_pwm.start(angle_to_duty(pan_angle))
+tilt_pwm.start(angle_to_duty(tilt_angle))
+
+# ----- Joystick Input Setup -----
+# Define GPIO pins for joystick directions.
+# Assumed wiring: normally open switches with internal pull-ups enabled.
+PIN_UP    = 8    # "Up" button increases tilt (camera tilts upward)
+PIN_RIGHT = 9    # "Right" button increases pan (camera turns right)
+PIN_DOWN  = 10   # "Down" button decreases tilt (camera tilts downward)
+PIN_LEFT  = 11   # "Left" button decreases pan (camera turns left)
+
+# Set joystick pins as inputs with pull-up resistors
+for pin in [PIN_UP, PIN_RIGHT, PIN_DOWN, PIN_LEFT]:
+    GPIO.setup(pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
+# Define parameters for angle adjustment
+ANGLE_STEP = 5  # degrees to change per press
+PAN_MIN, PAN_MAX = 0, 180
+TILT_MIN, TILT_MAX = 0, 180
+
+def update_servos():
+    """Update the PWM duty cycles for both servos based on current angles."""
+    pan_duty = angle_to_duty(pan_angle)
+    tilt_duty = angle_to_duty(tilt_angle)
+    pan_pwm.ChangeDutyCycle(pan_duty)
+    tilt_pwm.ChangeDutyCycle(tilt_duty)
+    print("Pan: {}°, Tilt: {}°".format(pan_angle, tilt_angle))
+
+print("Joystick control (GPIO only) running. Press CTRL+C to exit.")
 
 try:
-    # Set the camera to the forward position
-    print("Moving camera to forward position...")
-    set_servo_angle(FORWARD_ANGLE)
-    time.sleep(2)
+    while True:
+        # Check each joystick direction.
+        # Buttons are active LOW.
+        if GPIO.input(PIN_UP) == GPIO.LOW:
+            tilt_angle = min(tilt_angle + ANGLE_STEP, TILT_MAX)
+            update_servos()
+            time.sleep(0.3)  # Debounce delay
 
-    # Now move the camera upward
-    print("Moving camera upward...")
-    set_servo_angle(UPWARD_ANGLE)
-    time.sleep(2)
+        if GPIO.input(PIN_DOWN) == GPIO.LOW:
+            tilt_angle = max(tilt_angle - ANGLE_STEP, TILT_MIN)
+            update_servos()
+            time.sleep(0.3)
+
+        if GPIO.input(PIN_RIGHT) == GPIO.LOW:
+            pan_angle = min(pan_angle + ANGLE_STEP, PAN_MAX)
+            update_servos()
+            time.sleep(0.3)
+
+        if GPIO.input(PIN_LEFT) == GPIO.LOW:
+            pan_angle = max(pan_angle - ANGLE_STEP, PAN_MIN)
+            update_servos()
+            time.sleep(0.3)
+        
+        # Short sleep to reduce CPU load
+        time.sleep(0.1)
 
 except KeyboardInterrupt:
-    print("Interrupted by user.")
+    print("Exiting...")
 
 finally:
-    # Clean up the GPIO and stop PWM
-    print("Cleaning up GPIO...")
-    pwm.stop()
+    pan_pwm.stop()
+    tilt_pwm.stop()
     GPIO.cleanup()
-    print("Done.")
