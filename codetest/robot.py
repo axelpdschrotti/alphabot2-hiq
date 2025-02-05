@@ -92,6 +92,5 @@ class robot:
         if move:
             move_forward()
 
-    
     def report_virtual():
         print("Currently at position x:" + position[0] + "\ny: " + position[1] + "\nFacing: " + direction)

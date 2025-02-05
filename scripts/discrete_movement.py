@@ -1,6 +1,12 @@
 import RPi.GPIO as GPIO
 import time
 import threading
+import sys
+sys.path.append('../')
+import stop_distance_measurement
+import start_distance_measurement
+import stop_orientation_measurement
+import start_orientation_measurement
 
 # Motor and Sensor Pin Configuration
 IN1 = 13
