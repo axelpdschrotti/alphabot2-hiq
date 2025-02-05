@@ -65,14 +65,17 @@ def stop():
     GPIO.output(IN4, GPIO.LOW)
 
 def step_forward():
-    pwmA.ChangeDutyCycle(25)
-    pwmB.ChangeDutyCycle(25)
+    start_distance_measurement()
+    pwmA.ChangeDutyCycle(30)
+    pwmB.ChangeDutyCycle(30)
     move_forward()
     time.sleep(MOVE_INCREMENT_TIME)
     stop()
+    stop_distance_measurement()
 
 # New timed turn functions
 def turn_left_90():
+    start_orientation_measurement()
     pwmA.ChangeDutyCycle(10)
     pwmB.ChangeDutyCycle(10)
     print("Turning 90° left")
@@ -81,8 +84,10 @@ def turn_left_90():
     stop()
     pwmA.ChangeDutyCycle(speed)
     pwmB.ChangeDutyCycle(speed)
+    stop_orientation_measurement()
 
 def turn_right_90():
+    start_orientation_measurement()
     pwmA.ChangeDutyCycle(10)
     pwmB.ChangeDutyCycle(10)
     print("Turning 90° right")
@@ -91,6 +96,7 @@ def turn_right_90():
     stop()
     pwmA.ChangeDutyCycle(speed)
     pwmB.ChangeDutyCycle(speed)
+    stop_orientation_measurement()
 
 
 # Sensor Monitoring Thread
@@ -114,7 +120,7 @@ try:
     print("Control the robot with keys:")
     print("w: forward,a: left, d: right")
     print("q: stop, e: exit")
-    
+
     while True:
         cmd = input("Enter command: ").strip().lower()
         if cmd == 'w':
