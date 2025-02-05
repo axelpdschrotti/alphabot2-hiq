@@ -1,6 +1,8 @@
 import RPi.GPIO as GPIO
 import time
 import threading
+import sys
+sys.path.append('../')
 
 class movement:
 
