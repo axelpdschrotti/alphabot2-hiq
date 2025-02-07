@@ -6,8 +6,8 @@ import time
 GPIO.setmode(GPIO.BCM)
 
 # Define the GPIO pins where your IR sensors are connected.
-# These example pins (17, 18, 27, 22, 23) should be replaced with the actual ones from your setup.
-IR_SENSOR_PINS = [17, 18, 27, 22, 23]
+# These example pins [13, 12, 20, 21, 26] should be replaced with the actual ones from your setup.
+IR_SENSOR_PINS = [13, 12, 20, 21, 26]
 
 # Set up each IR sensor pin as an input
 for pin in IR_SENSOR_PINS:
