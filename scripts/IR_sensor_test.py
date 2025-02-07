@@ -24,31 +24,27 @@ GPIO.output(CLOCK_PIN, GPIO.LOW)
 GPIO.output(ADDRESS_PIN, GPIO.LOW)  # You may need to set this if channel selection is desired
 
 def read_ir_sensors():
-    """
-    Reads all 5 IR sensor values from the TLC1543 ADC.
-    Each sensor produces a 10-bit value.
-    Returns a list of 5 integer values.
-    """
     sensor_values = []
-    # Begin conversion by pulling CS low.
     GPIO.output(CS_PIN, GPIO.LOW)
-    # Small delay to allow conversion to start
     time.sleep(0.001)
-    # For each of the 5 sensors, read 10 bits.
-    for sensor in range(5):
+    for ch in range(5):
+        # Toggle ADDRESS_PIN based on channel number (this is an example)
+        if ch % 2 == 0:
+            GPIO.output(ADDRESS_PIN, GPIO.LOW)
+        else:
+            GPIO.output(ADDRESS_PIN, GPIO.HIGH)
         value = 0
         for i in range(10):
-            # Pulse the clock: data is read on the rising edge.
             GPIO.output(CLOCK_PIN, GPIO.LOW)
-            time.sleep(0.00001)  # 10 μs delay; adjust if needed
+            time.sleep(0.00001)
             GPIO.output(CLOCK_PIN, GPIO.HIGH)
             time.sleep(0.00001)
             bit = GPIO.input(DATAOUT_PIN)
             value = (value << 1) | bit
         sensor_values.append(value)
-    # End conversion: pull CS high.
     GPIO.output(CS_PIN, GPIO.HIGH)
     return sensor_values
+
 
 print("Starting IR sensor reading mode for all 5 sensors.")
 print("Press Ctrl+C to exit.")
