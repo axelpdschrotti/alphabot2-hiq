@@ -21,38 +21,38 @@ GPIO.output(CLOCK_PIN, GPIO.LOW)
 GPIO.output(ADDRESS_PIN, GPIO.LOW)
 
 def read_ir_sensors():
-    sensor_values = [0] * 5  # Initialize list for 5 sensors
-    channels = [0, 1, 2, 3, 4]  # ADC channels for sensors 1-5
+    sensor_values = [0] * 5
+    channels = [0, 1, 2, 3, 4]
 
     GPIO.output(CS_PIN, GPIO.LOW)
     time.sleep(0.001)
-
-    previous_channel = channels[-1]  # Start with last channel for first read
-
+    
+    # Dummy conversion to flush the pipeline:
+    for i in range(10):
+        GPIO.output(CLOCK_PIN, GPIO.LOW)
+        if i < 4:
+            bit = (channels[0] >> (3 - i)) & 1
+            GPIO.output(ADDRESS_PIN, bit)
+        time.sleep(0.00001)
+        GPIO.output(CLOCK_PIN, GPIO.HIGH)
+        _ = GPIO.input(DATAOUT_PIN)
+        time.sleep(0.00001)
+    
+    # Now start proper conversions; initialize previous_channel to channel 0.
+    previous_channel = channels[0]
     for idx in range(5):
         current_channel = channels[idx]
         value = 0
-
-        # Send address for NEXT channel (current_channel)
-        # while reading previous_channel's data
         for i in range(10):
             GPIO.output(CLOCK_PIN, GPIO.LOW)
-            
-            # Send address bits (first 4 clock cycles)
             if i < 4:
-                bit = (current_channel >> (3 - i)) & 1  # MSB first
+                bit = (current_channel >> (3 - i)) & 1
                 GPIO.output(ADDRESS_PIN, bit)
-            
             time.sleep(0.00001)
             GPIO.output(CLOCK_PIN, GPIO.HIGH)
-            
-            # Read data bit (all 10 cycles)
             data_bit = GPIO.input(DATAOUT_PIN)
             value = (value << 1) | data_bit
-            
             time.sleep(0.00001)
-
-        # Store value for previous_channel
         sensor_values[previous_channel] = value
         previous_channel = current_channel
 
