@@ -20,39 +20,40 @@ GPIO.output(CS_PIN, GPIO.HIGH)
 GPIO.output(CLOCK_PIN, GPIO.LOW)
 GPIO.output(ADDRESS_PIN, GPIO.LOW)
 
-def read_ir_sensors():
-    sensor_values = [0] * 5  # Initialize list for 5 sensors
-    channels = [0, 1, 2, 3, 4]  # ADC channels for sensors 1-5
+def read_channel(channel):
+    value = 0
+    for i in range(10):
+        GPIO.output(CLOCK_PIN, GPIO.LOW)
+        if i < 4:
+            bit = (channel >> (3 - i)) & 1
+            GPIO.output(ADDRESS_PIN, bit)
+        time.sleep(DELAY)
+        GPIO.output(CLOCK_PIN, GPIO.HIGH)
+        data_bit = GPIO.input(DATAOUT_PIN)
+        value = (value << 1) | data_bit
+        time.sleep(DELAY)
+    # Send extra clocks for settling:
+    for i in range(6):
+        GPIO.output(CLOCK_PIN, GPIO.LOW)
+        time.sleep(DELAY)
+        GPIO.output(CLOCK_PIN, GPIO.HIGH)
+        time.sleep(DELAY)
+    return value
 
+def read_ir_sensors():
+    sensor_values = [0] * 5
+    channels = [0, 1, 2, 3, 4]
     GPIO.output(CS_PIN, GPIO.LOW)
     time.sleep(0.001)
-
-    previous_channel = channels[-1]  # Start with last channel for first read
-
+    
+    # Flush conversion: do a dummy read for one channel
+    dummy = read_channel(channels[0])
+    
+    # Now for each channel, do two conversions:
     for idx in range(5):
         current_channel = channels[idx]
-        value = 0
-
-        # Send address for NEXT channel (current_channel)
-        # while reading previous_channel's data
-        DELAY = 0.00005  # 50 microseconds; adjust as needed
-
-        for i in range(10):
-            GPIO.output(CLOCK_PIN, GPIO.LOW)
-            if i < 4:
-                bit = (current_channel >> (3 - i)) & 1
-                GPIO.output(ADDRESS_PIN, bit)
-            time.sleep(DELAY)
-            GPIO.output(CLOCK_PIN, GPIO.HIGH)
-            data_bit = GPIO.input(DATAOUT_PIN)
-            value = (value << 1) | data_bit
-            time.sleep(DELAY)
-
-
-        # Store value for previous_channel
-        sensor_values[previous_channel] = value
-        previous_channel = current_channel
-
+        _ = read_channel(current_channel)  # dummy conversion – discard
+        sensor_values[idx] = read_channel(current_channel)  # take real reading
     GPIO.output(CS_PIN, GPIO.HIGH)
     return sensor_values
 
