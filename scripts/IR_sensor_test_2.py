@@ -35,22 +35,19 @@ def read_ir_sensors():
 
         # Send address for NEXT channel (current_channel)
         # while reading previous_channel's data
+        DELAY = 0.00005  # 50 microseconds; adjust as needed
+
         for i in range(10):
             GPIO.output(CLOCK_PIN, GPIO.LOW)
-            
-            # Send address bits (first 4 clock cycles)
             if i < 4:
-                bit = (current_channel >> (3 - i)) & 1  # MSB first
+                bit = (current_channel >> (3 - i)) & 1
                 GPIO.output(ADDRESS_PIN, bit)
-            
-            time.sleep(0.00001)
+            time.sleep(DELAY)
             GPIO.output(CLOCK_PIN, GPIO.HIGH)
-            
-            # Read data bit (all 10 cycles)
             data_bit = GPIO.input(DATAOUT_PIN)
             value = (value << 1) | data_bit
-            
-            time.sleep(0.00001)
+            time.sleep(DELAY)
+
 
         # Store value for previous_channel
         sensor_values[previous_channel] = value
