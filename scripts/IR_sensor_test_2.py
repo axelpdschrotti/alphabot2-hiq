@@ -11,7 +11,7 @@ DATAOUT_PIN = 23
 # Sensor-Channel Mapping (CRITICAL - Adjust if necessary)
 PHYSICAL_SENSORS_TO_ADC_CHANNELS = {
     1: 0,  # Physical Sensor 1 -> ADC Channel 0
-    2: 0,  # Physical Sensor 2 -> ADC Channel 1
+    2: 1,  # Physical Sensor 2 -> ADC Channel 1
     3: 0,  # Physical Sensor 3 -> ADC Channel 2
     4: 0,  # Physical Sensor 4 -> ADC Channel 3
     5: 0   # Physical Sensor 5 -> ADC Channel 4
