@@ -19,6 +19,7 @@ GPIO.setup(DATAOUT_PIN, GPIO.IN)
 GPIO.output(CS_PIN, GPIO.HIGH)
 GPIO.output(CLOCK_PIN, GPIO.LOW)
 GPIO.output(ADDRESS_PIN, GPIO.LOW)
+DELAY = 0.00005  # 50 microseconds; adjust as needed
 
 def read_channel(channel):
     value = 0
