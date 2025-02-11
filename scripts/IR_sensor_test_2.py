@@ -14,7 +14,7 @@ PHYSICAL_SENSORS_TO_ADC_CHANNELS = {
     2: 1,  # Physical Sensor 2 -> ADC Channel 1
     3: 2,  # Physical Sensor 3 -> ADC Channel 2
     4: 3,  # Physical Sensor 4 -> ADC Channel 3
-    5: 4   # Physical Sensor 5 -> ADC Channel 4
+    5: 3   # Physical Sensor 5 -> ADC Channel 4
 }
 
 GPIO.setmode(GPIO.BCM)
