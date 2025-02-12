@@ -17,8 +17,8 @@ SENSOR_COUNT = 5  # Number of sensors
 
 
 
-speedRight = 10
-speedLeft = 10
+speedRight = 5
+speedLeft = 5
 
 # Initialize GPIO
 def setup_motors():
@@ -41,14 +41,14 @@ def setup_motors():
 # Move forward
 def forward(skew = 'N'): # skew can be none 'N', right 'R', or left 'L'
     if(skew == 'L'):
-        speedLeft = 9
-        speedRight = 10
+        speedLeft = 4
+        speedRight = 5
     elif(skew == 'R'):
-        speedRight = 9
-        speedLeft = 10
+        speedRight = 4
+        speedLeft = 5
     else:
-        speedRight = 10
-        speedLeft = 10
+        speedRight = 5
+        speedLeft = 5
     pwmA.ChangeDutyCycle(speedRight)
     pwmB.ChangeDutyCycle(speedLeft)
     GPIO.output(IN1, GPIO.HIGH)
@@ -117,7 +117,7 @@ def follow_line():
         else:  # Stop if completely off the line
             stop()
 
-        time.sleep(0.2)  # Read sensor values 5 times per second (every 200 ms)
+        time.sleep(0.1)  # Read sensor values 5 times per second (every 200 ms)
 
 # Cleanup GPIO
 def cleanup():
