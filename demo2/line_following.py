@@ -12,7 +12,7 @@ ENB = 26  # Motor B PWM
 
 # Threshold for sensor readings to determine if it's on the line
 THRESHOLD = 700
-MAXDIFF = 200
+#MAXDIFF = 200
 SENSOR_COUNT = 5  # Number of sensors
 
 
@@ -105,10 +105,10 @@ def follow_line():
     while True:
         sensor_values = read_sensors(sensor)
         print(f"Sensor values: {sensor_values}")
-        max_sensor_value = max(sensor_values)
+        #max_sensor_value = max(sensor_values)
         # Determine sensor states (0 = on the line, 1 = off the line)
-        #sensor_states = [1 if value > THRESHOLD else 0 for value in sensor_values]
-        sensor_states = [0 if (max_sensor_value - value) > MAXDIFF and value < THRESHOLD else 1 for value in sensor_values]
+        sensor_states = [1 if value > THRESHOLD else 0 for value in sensor_values]
+        #sensor_states = [0 if (max_sensor_value - value) > MAXDIFF and value < THRESHOLD else 1 for value in sensor_values]
 
         print(f"Sensor states: {sensor_states}")
 
