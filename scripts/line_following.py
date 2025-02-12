@@ -12,8 +12,13 @@ ENB = 26  # Motor B PWM
 
 # Threshold for sensor readings to determine if it's on the line
 THRESHOLD = 400
-SPEED = 10  # Speed as a percentage (10% of max speed)
 SENSOR_COUNT = 5  # Number of sensors
+
+
+
+
+speedRight = 10
+speedLeft = 10
 
 # Initialize GPIO
 def setup_motors():
@@ -30,15 +35,40 @@ def setup_motors():
     global pwmA, pwmB
     pwmA = GPIO.PWM(ENA, 50)  # PWM frequency at 50 Hz
     pwmB = GPIO.PWM(ENB, 50)
-    pwmA.start(SPEED)  # Start with 10% speed
-    pwmB.start(SPEED)
+    pwmA.start(speedRight)  # Start with 10% speed
+    pwmB.start(speedLeft)
 
 # Move forward
-def forward():
+def forward(skew = 'N'): # skew can be none 'N', right 'R', or left 'L'
+    if(skew == 'L'):
+        speedLeft = 9
+        speedRight = 10
+    elif(skew == 'R'):
+        speedRight = 9
+        speedLeft = 10
+    else:
+        speedRight = 10
+        speedLeft = 10
+    pwmA.ChangeDutyCycle(speedRight)
+    pwmB.ChangeDutyCycle(speedLeft)
     GPIO.output(IN1, GPIO.HIGH)
     GPIO.output(IN2, GPIO.LOW)
     GPIO.output(IN3, GPIO.HIGH)
     GPIO.output(IN4, GPIO.LOW)
+
+# Bear left
+def bear_left():
+    GPIO.output(IN1, GPIO.HIGH)
+    GPIO.output(IN2, GPIO.LOW)
+    GPIO.output(IN3, GPIO.HIGH)
+    GPIO.output(IN4, GPIO.LOW)
+
+# Bear right
+def bear_right():
+    GPIO.output(IN1, GPIO.HIGH)
+    GPIO.output(IN2, GPIO.LOW)   # Left motor forward
+    GPIO.output(IN3, GPIO.LOW)
+    GPIO.output(IN4, GPIO.HIGH)  # Right motor backward
 
 # Turn left
 def turn_left():
@@ -79,11 +109,11 @@ def follow_line():
         print(f"Sensor states: {sensor_states}")
 
         if sensor_states == [1, 1, 0, 1, 1]:  # Centered on the line
-            forward()
-        elif sensor_states in ([0, 0, 0, 1, 1], [0, 0, 1, 1, 1], [0, 1, 1, 1, 1]):  # Off to the right
-            turn_left()
-        elif sensor_states in ([1, 1, 1, 0, 0], [1, 1, 0, 0, 0], [1, 1, 1, 1, 0]):  # Off to the left
-            turn_right()
+            forward('N')
+        elif sensor_states in ([1, 0, 1, 1, 1], [0, 1, 1, 1, 1], [1, 0, 0, 1, 1]):  # Off to the right
+            forward('R')
+        elif sensor_states in ([1, 1, 0, 0, 1], [1, 1, 1, 0, 1], [1, 1, 1, 1, 0]):  # Off to the left
+            forward('L')
         else:  # Stop if completely off the line
             stop()
 
