@@ -41,14 +41,14 @@ def setup_motors():
 # Move forward
 def forward(skew = 'N'): # skew can be none 'N', right 'R', or left 'L'
     if(skew == 'L'):
-        speedLeft = 8
-        speedRight = 10
+        speedLeft = 6
+        speedRight = 9
     elif(skew == 'R'):
-        speedRight = 8
-        speedLeft = 10
+        speedRight = 6
+        speedLeft = 9
     else:
-        speedRight = 8
-        speedLeft = 8
+        speedRight = 6
+        speedLeft = 6
     pwmA.ChangeDutyCycle(speedRight)
     pwmB.ChangeDutyCycle(speedLeft)
     GPIO.output(IN1, GPIO.HIGH)
@@ -118,8 +118,9 @@ def follow_line():
         elif sensor_states in ([1, 1, 0, 0, 1], [1, 1, 1, 0, 1], [1, 1, 1, 1, 0], [1, 1, 1, 0, 0]):  # Off to the left
             forward('L')
         elif sensor_states == [0, 0, 0, 0, 0]: #Intersection reached
-            stop()
+            #stop()
             print("We have reached an intersection")
+            turn_right()
         else:  # Stop if completely off the line
             stop()
 
