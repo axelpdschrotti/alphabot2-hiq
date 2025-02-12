@@ -25,7 +25,7 @@ try:
             right_status = "Obstacle" if right_detected else "No Obstacle"
             print(f"Left: {left_status}, Right: {right_status}")
 
-        time.sleep(0.1)  # Short delay between readings
+        time.sleep(0.2)  # Short delay between readings
 
 except KeyboardInterrupt:
     GPIO.cleanup()
