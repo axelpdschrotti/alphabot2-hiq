@@ -41,14 +41,14 @@ def setup_motors():
 # Move forward
 def forward(skew = 'N'): # skew can be none 'N', right 'R', or left 'L'
     if(skew == 'L'):
-        speedLeft = 4
-        speedRight = 5
+        speedLeft = 8
+        speedRight = 10
     elif(skew == 'R'):
-        speedRight = 4
-        speedLeft = 5
+        speedRight = 8
+        speedLeft = 10
     else:
-        speedRight = 5
-        speedLeft = 5
+        speedRight = 8
+        speedLeft = 8
     pwmA.ChangeDutyCycle(speedRight)
     pwmB.ChangeDutyCycle(speedLeft)
     GPIO.output(IN1, GPIO.HIGH)
