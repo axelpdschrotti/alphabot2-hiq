@@ -11,7 +11,7 @@ IN4 = 20
 ENB = 26  # Motor B PWM
 
 # Threshold for sensor readings to determine if it's on the line
-THRESHOLD = 400
+THRESHOLD = 200
 SENSOR_COUNT = 5  # Number of sensors
 
 
@@ -100,12 +100,15 @@ def read_sensors(sensor):
 def follow_line():
     print("Starting line-following...")
     sensor = TRSensors.TRSensor()
+    max_value = 0
     while True:
         sensor_values = read_sensors(sensor)
         print(f"Sensor values: {sensor_values}")
-
+        max_sensor_value = max(sensor_values)
         # Determine sensor states (0 = on the line, 1 = off the line)
-        sensor_states = [1 if value > THRESHOLD else 0 for value in sensor_values]
+        #sensor_states = [1 if value > THRESHOLD else 0 for value in sensor_values]
+        sensor_states = [0 if (max_sensor_value - value) > THRESHOLD else 1 for value in sensor_values]
+
         print(f"Sensor states: {sensor_states}")
 
         if sensor_states == [1, 1, 0, 1, 1]:  # Centered on the line
