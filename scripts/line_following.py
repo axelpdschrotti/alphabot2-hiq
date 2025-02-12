@@ -78,11 +78,11 @@ def follow_line():
         sensor_states = [1 if value > THRESHOLD else 0 for value in sensor_values]
         print(f"Sensor states: {sensor_states}")
 
-        if sensor_states == [0, 0, 1, 0, 0]:  # Centered on the line
+        if sensor_states == [1, 1, 0, 1, 1]:  # Centered on the line
             forward()
-        elif sensor_states in ([1, 1, 1, 0, 0], [1, 1, 0, 0, 0], [1, 0, 0, 0, 0]):  # Off to the right
+        elif sensor_states in ([0, 0, 0, 1, 1], [0, 0, 1, 1, 1], [0, 1, 1, 1, 1]):  # Off to the right
             turn_left()
-        elif sensor_states in ([0, 0, 1, 1, 1], [0, 0, 0, 1, 1], [0, 0, 0, 0, 1]):  # Off to the left
+        elif sensor_states in ([1, 1, 1, 0, 0], [1, 1, 0, 0, 0], [1, 1, 1, 1, 0]):  # Off to the left
             turn_right()
         else:  # Stop if completely off the line
             stop()
