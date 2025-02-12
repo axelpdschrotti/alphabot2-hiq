@@ -114,6 +114,9 @@ def follow_line():
             forward('R')
         elif sensor_states in ([1, 1, 0, 0, 1], [1, 1, 1, 0, 1], [1, 1, 1, 1, 0], [1, 1, 1, 0, 0]):  # Off to the left
             forward('L')
+        elif sensor_states == [0, 0, 0, 0, 0]: #Intersection reached
+            stop()
+            print("We have reached an intersection")
         else:  # Stop if completely off the line
             stop()
 
