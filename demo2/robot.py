@@ -92,6 +92,8 @@ if __name__ == "__main__":
             break  # Exit the loop if input is valid
         except ValueError:
             print("Invalid input. Please enter a valid integer.")
+    
+    line_following.setup_motors()
 
     r = robot(gridX, gridY)
     while(True):
