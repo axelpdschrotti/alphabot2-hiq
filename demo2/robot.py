@@ -62,7 +62,7 @@ class robot:
                     self.turn_left_90()
                     return 0
                 case 'MOVE':
-                    self.forward_step()
+                    self.move_forward()
                     return 0
                 case _:
                     print("Invalid command")
