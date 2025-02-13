@@ -15,7 +15,7 @@ THRESHOLD = 700
 #MAXDIFF = 200
 SENSOR_COUNT = 5  # Number of sensors
 # Turn timing configuration (calibrate these values)
-TURN_90_TIME = 0.6    # Time needed for 90° turn at current speed
+TURN_90_TIME = 0.65    # Time needed for 90° turn at current speed
 
 
 
@@ -132,9 +132,9 @@ def forward_step():
 
         if sensor_states == [1, 1, 0, 1, 1]:  # Centered on the line
             forward('N')
-        elif sensor_states in ([1, 0, 1, 1, 1], [0, 1, 1, 1, 1], [1, 0, 0, 1, 1], [0, 0, 1, 1, 1], [0, 0, 0, 1, 1], [0, 0, 0, 0, 1]):  # Off to the right
+        elif sensor_states in ([1, 0, 1, 1, 1], [0, 1, 1, 1, 1], [1, 0, 0, 1, 1], [0, 0, 1, 1, 1], [0, 0, 0, 1, 1], [0, 0, 0, 0, 1], [0, 1, 0, 1, 1]):  # Off to the right
             forward('R')
-        elif sensor_states in ([1, 1, 0, 0, 1], [1, 1, 1, 0, 1], [1, 1, 1, 1, 0], [1, 1, 1, 0, 0], [1, 1, 0, 0, 0], [1, 0, 0, 0, 0], [1, 0, 0, 0, 1] ):  # Off to the left
+        elif sensor_states in ([1, 1, 0, 0, 1], [1, 1, 1, 0, 1], [1, 1, 1, 1, 0], [1, 1, 1, 0, 0], [1, 1, 0, 0, 0], [1, 0, 0, 0, 0], [1, 1, 0, 1, 0], [1, 0, 0, 0, 1] ):  # Off to the left
             forward('L')
         elif sensor_states == [0, 0, 0, 0, 0]: #Intersection reached
             stop()
