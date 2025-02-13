@@ -15,11 +15,11 @@ class robot:
         self.direction = dir
 
     def turn_right(self):
-        direction = self.turn_direction[self.turn_direction.index(direction) + 1]
+        self.direction = self.turn_direction[self.turn_direction.index(self.direction) + 1]
         line_following.turn_right_90()
 
     def turn_left(self):
-        direction =  self.turn_direction[self.turn_direction.index(direction) - 1]
+        self.direction =  self.turn_direction[self.turn_direction.index(self.direction) - 1]
         line_following.turn_left_90()
 
     def move_forward(self):
