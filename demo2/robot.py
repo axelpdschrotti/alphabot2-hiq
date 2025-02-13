@@ -53,7 +53,7 @@ class robot:
 
 
     def read_input(self):
-        user_input = input("Please enter an instruction: ")
+        user_input = input("Please enter an instruction (MOVE, LEFT, RIGHT, REPORT, or 'q' to quit): ")
         user_input_str = str(user_input)
         user_input_array = user_input_str.split(",")
         if (len(user_input_array) == 1):
@@ -67,7 +67,7 @@ class robot:
                 case 'MOVE':
                     self.move_forward()
                     return 0
-                case 'r':
+                case 'REPORT':
                     self.report()
                     return 0
                 case _:
@@ -102,6 +102,7 @@ if __name__ == "__main__":
     line_following.setup_motors()
 
     r = robot(gridX, gridY)
+    print("To place robot, type 'PLACE, <valid X coordinate>, <valid Y coordinate>, <valid direction, in CAPITAL LETTERS>'")
     while(True):
         ret = r.read_input()
         if (ret == 1):
