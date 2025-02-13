@@ -28,25 +28,25 @@ class robot:
                 print("This move would put the robot out of bounds")
             else:
                 self.pos[1] += 1
-                line_following.move_forward()
+                line_following.forward_step()
         elif (self.direction == 'SOUTH'):
             if ((self.pos[1]) == 0):
                 print("This move would put the robot out of bounds")
             else:
                 self.pos[1] -= 1
-                line_following.move_forward()
+                line_following.forward_step()
         elif (self.direction == 'EAST'):
             if ((self.pos[0]) == self.gridX - 1):
                 print("This move would put the robot out of bounds")
             else:
                 self.pos[0] += 1
-                line_following.move_forward()
+                line_following.forward_step()
         elif (self.direction == 'WEST'):
             if ((self.pos[0]) == 0):
                 print("This move would put the robot out of bounds")
             else:
                 self.pos[0] -= 1
-                line_following.move_forward()
+                line_following.forward_step()
 
 
     def read_input(self):
@@ -56,13 +56,13 @@ class robot:
         if (len(user_input_array) == 1):
             match(user_input_array[0]):
                 case 'RIGHT':
-                    self.turn_right()
+                    self.turn_right_90()
                     return 0
                 case 'LEFT':
-                    self.turn_left()
+                    self.turn_left_90()
                     return 0
                 case 'MOVE':
-                    self.move_forward()
+                    self.forward_step()
                     return 0
                 case _:
                     print("Invalid command")
