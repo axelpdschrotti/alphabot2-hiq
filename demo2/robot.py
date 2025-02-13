@@ -72,7 +72,7 @@ class robot:
                     return 0
                 case _:
                     print("Invalid command")
-        elif(len(user_input_array == 4)):
+        elif(len(user_input_array) == 4):
             if(user_input_array[0] == 'PLACE'):
                 if (user_input_array[3] in self.turn_direction):
                     if(int(user_input_array[1]) in range(self.gridX) and int(user_input_array[2] in range(self.gridY))):
