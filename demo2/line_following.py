@@ -92,6 +92,27 @@ def stop():
     GPIO.output(IN3, GPIO.LOW)
     GPIO.output(IN4, GPIO.LOW)
 
+def turn_left_90():
+    pwmA.ChangeDutyCycle(20)
+    pwmB.ChangeDutyCycle(20)
+    print("Turning 90° left")
+    turn_left()
+    time.sleep(TURN_90_TIME)
+    stop()
+    pwmA.ChangeDutyCycle(speed)
+    pwmB.ChangeDutyCycle(speed)
+
+def turn_right_90():
+    pwmA.ChangeDutyCycle(20)
+    pwmB.ChangeDutyCycle(20)
+    print("Turning 90° right")
+    turn_right()
+    time.sleep(TURN_90_TIME)
+    stop()
+    pwmA.ChangeDutyCycle(speed)
+    pwmB.ChangeDutyCycle(speed)
+
+
 # Function to read sensor values (replace this with your sensor reading function)
 def read_sensors(sensor):
     """Simulates reading 5 sensor values from an array."""
@@ -136,7 +157,7 @@ if __name__ == "__main__":
     try:
         setup_motors()
         forward_step()
-        turn_right()
+        turn_right_90()
         forward_step()
     except KeyboardInterrupt:
         print("Line-following interrupted. Stopping...")
