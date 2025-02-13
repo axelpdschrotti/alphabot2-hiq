@@ -15,7 +15,7 @@ THRESHOLD = 700
 #MAXDIFF = 200
 SENSOR_COUNT = 5  # Number of sensors
 # Turn timing configuration (calibrate these values)
-TURN_90_TIME = 0.4    # Time needed for 90° turn at current speed
+TURN_90_TIME = 0.6    # Time needed for 90° turn at current speed
 
 
 
