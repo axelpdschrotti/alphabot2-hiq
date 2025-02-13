@@ -121,7 +121,7 @@ def forward_step():
         elif sensor_states == [0, 0, 0, 0, 0]: #Intersection reached
             stop()
             print("We have reached an intersection")
-            break
+            return False
         else:  # Stop i f completely off the line
             stop()
 
