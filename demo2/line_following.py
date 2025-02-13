@@ -98,7 +98,7 @@ def read_sensors(sensor):
     return sensor.AnalogRead()
 
 # Main line-following logic
-def follow_line():
+def forward_step():
     print("Starting line-following...")
     sensor = TRSensors.TRSensor()
     max_value = 0
@@ -112,16 +112,16 @@ def follow_line():
 
         print(f"Sensor states: {sensor_states}")
 
-        if sensor_states == [1, 1, 0, 1, 1]:  # Centered on the line
+        if sensor_states == ([1, 1, 0, 1, 1], [1, 0, 0, 0, 1]):  # Centered on the line
             forward('N')
         elif sensor_states in ([1, 0, 1, 1, 1], [0, 1, 1, 1, 1], [1, 0, 0, 1, 1], [0, 0, 1, 1, 1], [0, 0, 0, 1, 1], [0, 0, 0, 0, 1]):  # Off to the right
             forward('R')
         elif sensor_states in ([1, 1, 0, 0, 1], [1, 1, 1, 0, 1], [1, 1, 1, 1, 0], [1, 1, 1, 0, 0], [1, 1, 0, 0, 0], [1, 0, 0, 0, 0]):  # Off to the left
             forward('L')
         elif sensor_states == [0, 0, 0, 0, 0]: #Intersection reached
-            #stop()
+            stop()
             print("We have reached an intersection")
-            turn_right()
+            break
         else:  # Stop if completely off the line
             stop()
 
@@ -135,7 +135,9 @@ def cleanup():
 if __name__ == "__main__":
     try:
         setup_motors()
-        follow_line()
+        forward_step()
+        turn_right()
+        forward_step()
     except KeyboardInterrupt:
         print("Line-following interrupted. Stopping...")
         cleanup()
