@@ -16,11 +16,11 @@ class robot:
 
     def turn_right(self):
         direction = self.turn_direction[self.turn_direction.index(direction) + 1]
-        line_following.turn_right()
+        line_following.turn_right_90()
 
     def turn_left(self):
         direction =  self.turn_direction[self.turn_direction.index(direction) - 1]
-        line_following.turn_left()
+        line_following.turn_left_90()
 
     def move_forward(self):
         if (self.direction == 'NORTH'):
@@ -56,10 +56,10 @@ class robot:
         if (len(user_input_array) == 1):
             match(user_input_array[0]):
                 case 'RIGHT':
-                    self.turn_right_90()
+                    self.turn_right()
                     return 0
                 case 'LEFT':
-                    self.turn_left_90()
+                    self.turn_left()
                     return 0
                 case 'MOVE':
                     self.move_forward()
