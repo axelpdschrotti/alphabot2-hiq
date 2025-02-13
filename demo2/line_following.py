@@ -112,7 +112,7 @@ def forward_step():
 
         print(f"Sensor states: {sensor_states}")
 
-        if sensor_states == ([1, 1, 0, 1, 1], [1, 0, 0, 0, 1]):  # Centered on the line
+        if sensor_states == [1, 1, 0, 1, 1]:  # Centered on the line
             forward('N')
         elif sensor_states in ([1, 0, 1, 1, 1], [0, 1, 1, 1, 1], [1, 0, 0, 1, 1], [0, 0, 1, 1, 1], [0, 0, 0, 1, 1], [0, 0, 0, 0, 1]):  # Off to the right
             forward('R')
@@ -122,7 +122,7 @@ def forward_step():
             stop()
             print("We have reached an intersection")
             break
-        else:  # Stop if completely off the line
+        else:  # Stop i f completely off the line
             stop()
 
         time.sleep(0.1)  # Read sensor values 5 times per second (every 200 ms)
