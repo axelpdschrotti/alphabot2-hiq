@@ -130,11 +130,11 @@ def forward_step():
 
         print(f"Sensor states: {sensor_states}")
 
-        if sensor_states == [1, 1, 0, 1, 1] or [1, 0, 0, 0, 1] :  # Centered on the line
+        if sensor_states == [1, 1, 0, 1, 1]:  # Centered on the line
             forward('N')
         elif sensor_states in ([1, 0, 1, 1, 1], [0, 1, 1, 1, 1], [1, 0, 0, 1, 1], [0, 0, 1, 1, 1], [0, 0, 0, 1, 1], [0, 0, 0, 0, 1]):  # Off to the right
             forward('R')
-        elif sensor_states in ([1, 1, 0, 0, 1], [1, 1, 1, 0, 1], [1, 1, 1, 1, 0], [1, 1, 1, 0, 0], [1, 1, 0, 0, 0], [1, 0, 0, 0, 0]):  # Off to the left
+        elif sensor_states in ([1, 1, 0, 0, 1], [1, 1, 1, 0, 1], [1, 1, 1, 1, 0], [1, 1, 1, 0, 0], [1, 1, 0, 0, 0], [1, 0, 0, 0, 0], [1, 0, 0, 0, 1] ):  # Off to the left
             forward('L')
         elif sensor_states == [0, 0, 0, 0, 0]: #Intersection reached
             stop()
