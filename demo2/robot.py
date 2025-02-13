@@ -15,11 +15,11 @@ class robot:
         self.direction = dir
 
     def turn_right(self):
-        self.direction = self.turn_direction[self.turn_direction.index(self.direction) + 1]
+        self.direction = self.turn_direction[(self.turn_direction.index(self.direction) + 1) % 4]
         line_following.turn_right_90()
 
     def turn_left(self):
-        self.direction =  self.turn_direction[self.turn_direction.index(self.direction) - 1]
+        self.direction =  self.turn_direction[(self.turn_direction.index(self.direction) - 1) % 4]
         line_following.turn_left_90()
 
     def move_forward(self):
@@ -48,6 +48,9 @@ class robot:
                 self.pos[0] -= 1
                 line_following.forward_step()
 
+    def report(self):
+        print("Robot position is:\nX: " + self.pos[0] + "\nY: " + self.pos[1] + "\nFacing: " + self.direction + "\n")
+
 
     def read_input(self):
         user_input = input("Please enter an instruction: ")
@@ -63,6 +66,9 @@ class robot:
                     return 0
                 case 'MOVE':
                     self.move_forward()
+                    return 0
+                case 'r':
+                    self.report()
                     return 0
                 case _:
                     print("Invalid command")
