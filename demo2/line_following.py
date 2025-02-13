@@ -94,24 +94,20 @@ def stop():
     GPIO.output(IN4, GPIO.LOW)
 
 def turn_left_90():
-    pwmA.ChangeDutyCycle(20)
-    pwmB.ChangeDutyCycle(20)
+    pwmA.ChangeDutyCycle(10)
+    pwmB.ChangeDutyCycle(10)
     print("Turning 90° left")
     turn_left()
     time.sleep(TURN_90_TIME)
     stop()
-    pwmA.ChangeDutyCycle(speed)
-    pwmB.ChangeDutyCycle(speed)
 
 def turn_right_90():
-    pwmA.ChangeDutyCycle(20)
-    pwmB.ChangeDutyCycle(20)
+    pwmA.ChangeDutyCycle(10)
+    pwmB.ChangeDutyCycle(10)
     print("Turning 90° right")
     turn_right()
     time.sleep(TURN_90_TIME)
     stop()
-    pwmA.ChangeDutyCycle(speed)
-    pwmB.ChangeDutyCycle(speed)
 
 
 # Function to read sensor values (replace this with your sensor reading function)
