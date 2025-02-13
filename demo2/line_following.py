@@ -15,7 +15,7 @@ THRESHOLD = 700
 #MAXDIFF = 200
 SENSOR_COUNT = 5  # Number of sensors
 # Turn timing configuration (calibrate these values)
-TURN_90_TIME = 1.3    # Time needed for 90° turn at current speed
+TURN_90_TIME = 1.1    # Time needed for 90° turn at current speed
 
 
 
@@ -130,7 +130,7 @@ def forward_step():
 
         print(f"Sensor states: {sensor_states}")
 
-        if sensor_states in ([1, 1, 0, 1, 1], [1, 0, 0, 0, 1]):  # Centered on the line
+        if sensor_states in ([1, 1, 0, 1, 1], [1, 0, 0, 0, 1], [1, 0, 1, 0, 0], [0, 0, 1, 0, 1]):  # Centered on the line
             forward('N')
         elif sensor_states in ([1, 0, 1, 1, 1], [0, 1, 1, 1, 1], [1, 0, 0, 1, 1], [0, 0, 1, 1, 1], [0, 0, 0, 1, 1], [0, 0, 0, 0, 1], [0, 1, 0, 1, 1]):  # Off to the right
             forward('R')
