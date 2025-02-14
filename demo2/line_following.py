@@ -11,11 +11,11 @@ IN4 = 20
 ENB = 26  # Motor B PWM
 
 # Threshold for sensor readings to determine if it's on the line
-THRESHOLD = 700
+THRESHOLD = 300
 #MAXDIFF = 200
 SENSOR_COUNT = 5  # Number of sensors
 # Turn timing configuration (calibrate these values)
-TURN_90_TIME = 1.35    # Time needed for 90° turn at current speed
+TURN_90_TIME = 1.15    # Time needed for 90° turn at current speed
 
 
 
