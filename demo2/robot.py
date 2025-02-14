@@ -57,7 +57,7 @@ class robot:
         user_input_str = str(user_input)
         user_input_array = user_input_str.split(",")
         if (len(user_input_array) == 1):
-            match(user_input_array[0]):
+            match((user_input_array[0].strip()).upper()):
                 case 'RIGHT':
                     self.turn_right()
                     return 0
@@ -70,6 +70,8 @@ class robot:
                 case 'REPORT':
                     self.report()
                     return 0
+                case 'E':
+                    return 1
                 case _:
                     print("Invalid command")
         elif(len(user_input_array) == 4):
@@ -78,9 +80,6 @@ class robot:
                     if(int(user_input_array[1].strip()) < self.gridX and int(user_input_array[2].strip()) < self.gridY):
                         self.place(int(user_input_array[1].strip()), int(user_input_array[2].strip()), (user_input_array[3].strip()).upper())
                         return 0
-        elif(user_input_array[0] == 'e'):
-            print("exiting program")
-            return 1
         print("invalid input")
         return 0
 
