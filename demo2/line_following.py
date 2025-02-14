@@ -42,17 +42,13 @@ def setup_motors():
     pwmB.start(0)
 
 # Move forward
-def forward(skew = 'N', Hard_Skew = 0): # skew can be none 'N', right 'R', or left 'L'
+def forward(skew = 'N'): # skew can be none 'N', right 'R', or left 'L'
     if(skew == 'L'):
         speedLeft = 6
         speedRight = 8
-        if Hard_Skew == 1:
-            speedRight = 9
     elif(skew == 'R'):
         speedRight = 6
         speedLeft = 8
-        if Hard_Skew == 1:
-            speedLeft = 9
     else:
         speedRight = 6
         speedLeft = 6
@@ -141,13 +137,9 @@ def forward_step():
         elif sensor_states in ([1, 0, 1, 1, 1], [0, 1, 1, 1, 1], [1, 0, 0, 1, 1], [0, 0, 1, 1, 1], [0, 0, 0, 1, 1], [0, 0, 0, 0, 1], [0, 1, 0, 1, 1]):  # Off to the right
             forward('R')
             prev_skew = 1
-            if sensor_states in ([0, 1, 1, 1, 1]):
-                forward('R', 1)
         elif sensor_states in ([1, 1, 0, 0, 1], [1, 1, 1, 0, 1], [1, 1, 1, 1, 0], [1, 1, 1, 0, 0], [1, 1, 0, 0, 0], [1, 0, 0, 0, 0], [1, 1, 0, 1, 0]):  # Off to the left
             forward('L')
             prev_skew = 2
-            if sensor_states in ([1, 1, 1, 1, 0]):
-                forward('L', 1)
         elif sensor_states == [0, 0, 0, 0, 0]: #Intersection reached
             time.sleep(MOVE_INTERSECTION_TIME)
             stop()
