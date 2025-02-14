@@ -49,7 +49,7 @@ class robot:
                 line_following.forward_step()
 
     def report(self):
-        print("Robot position is:\nX: " + self.pos[0] + "\nY: " + self.pos[1] + "\nFacing: " + self.direction + "\n")
+        print("Robot position is:\nX: " + str(self.pos[0]) + "\nY: " + str(self.pos[1]) + "\nFacing: " + self.direction + "\n")
 
 
     def read_input(self):
