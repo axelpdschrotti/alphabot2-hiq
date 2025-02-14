@@ -11,7 +11,7 @@ IN4 = 20
 ENB = 26  # Motor B PWM
 
 # Threshold for sensor readings to determine if it's on the line
-THRESHOLD = 300
+THRESHOLD = 600
 #MAXDIFF = 200
 SENSOR_COUNT = 5  # Number of sensors
 # Turn timing configuration (calibrate these values)
@@ -154,16 +154,7 @@ def forward_step():
             print("We have reached an intersection")
             return False
         else:  # forward for edge cases
-            print("Line following lost")
-            if prev_skew == 1:
-                turn_right()
-                time.sleep(MOVE_INTERSECTION_TIME)
-            elif prev_skew == 2:
-                turn_left()
-                time.sleep(MOVE_INTERSECTION_TIME)
-            stop()
-            
-
+            print("Line following lost")       
             stop()
         time.sleep(0.1)  # Read sensor values 5 times per second (every 200 ms)
 
