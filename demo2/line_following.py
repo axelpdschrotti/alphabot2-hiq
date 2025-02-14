@@ -11,7 +11,7 @@ IN4 = 20
 ENB = 26  # Motor B PWM
 
 # Threshold for sensor readings to determine if it's on the line
-THRESHOLD = 600
+THRESHOLD = 700
 #MAXDIFF = 200
 SENSOR_COUNT = 5  # Number of sensors
 # Turn timing configuration (calibrate these values)
@@ -38,21 +38,21 @@ def setup_motors():
     global pwmA, pwmB
     pwmA = GPIO.PWM(ENA, 50)  # PWM frequency at 50 Hz
     pwmB = GPIO.PWM(ENB, 50)
-    pwmA.start(speedRight)  # Start with 10% speed
-    pwmB.start(speedLeft)
+    pwmA.start(0)  # Start with 10% speed
+    pwmB.start(0)
 
 # Move forward
 def forward(skew = 'N', Hard_Skew = 0): # skew can be none 'N', right 'R', or left 'L'
     if(skew == 'L'):
         speedLeft = 6
-        speedRight = 9
+        speedRight = 8
         if Hard_Skew == 1:
-            speedRight = 10
+            speedRight = 9
     elif(skew == 'R'):
         speedRight = 6
-        speedLeft = 9
+        speedLeft = 8
         if Hard_Skew == 1:
-            speedLeft = 10
+            speedLeft = 9
     else:
         speedRight = 6
         speedLeft = 6
