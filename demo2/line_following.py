@@ -15,9 +15,9 @@ THRESHOLD = 300
 #MAXDIFF = 200
 SENSOR_COUNT = 5  # Number of sensors
 # Turn timing configuration (calibrate these values)
-TURN_90_TIME = 1.15    # Time needed for 90° turn at current speed
+TURN_90_TIME = 0.9    # Time needed for 90° turn at current speed
 # Intersection timing configuration (calibrate these values)
-MOVE_INTERSECTION_TIME = 0.45    # Time needed for intersection
+MOVE_INTERSECTION_TIME = 0.3    # Time needed for intersection
 
 
 speedRight = 5
@@ -150,13 +150,11 @@ def forward_step():
             stop()
             print("We have reached an intersection")
             return False
-        elif sensor_states == [1, 1, 1, 1, 1]: # Stop i f completely off the line
+        else:  # forward for edge cases
             print("Line following lost")
             turn_left()
             time.sleep(MOVE_INTERSECTION_TIME)
             stop()
-        else:  # forward for edge cases
-             forward('N')
         time.sleep(0.1)  # Read sensor values 5 times per second (every 200 ms)
 
 # Cleanup GPIO
