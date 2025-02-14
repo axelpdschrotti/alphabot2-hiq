@@ -53,7 +53,7 @@ class robot:
 
 
     def read_input(self):
-        user_input = input("Please enter an instruction (MOVE, LEFT, RIGHT, REPORT, or 'q' to quit): ")
+        user_input = input("Please enter an instruction (MOVE, LEFT, RIGHT, REPORT, or 'e' to exit): ")
         user_input_str = str(user_input)
         user_input_array = user_input_str.split(",")
         if (len(user_input_array) == 1):
@@ -73,10 +73,10 @@ class robot:
                 case _:
                     print("Invalid command")
         elif(len(user_input_array) == 4):
-            if(user_input_array[0] == 'PLACE'):
-                if (user_input_array[3] in self.turn_direction):
-                    if(int(user_input_array[1]) in range(self.gridX) and int(user_input_array[2] in range(self.gridY))):
-                        self.place(int(user_input_array[1]), int(user_input_array[2]), user_input_array[3])
+            if((user_input_array[0].strip()).upper() == 'PLACE'):
+                if ((user_input_array[3].strip()).upper() in self.turn_direction):
+                    if(int(user_input_array[1].strip()) < self.gridX and int(user_input_array[2].strip()) < self.gridY):
+                        self.place(int(user_input_array[1].strip()), int(user_input_array[2].strip()), (user_input_array[3].strip()).upper())
                         return 0
         elif(user_input_array[0] == 'e'):
             print("exiting program")
