@@ -11,7 +11,7 @@ IN4 = 20
 ENB = 26  # Motor B PWM
 
 # Threshold for sensor readings to determine if it's on the line
-THRESHOLD = 700
+THRESHOLD = 750
 #MAXDIFF = 200
 SENSOR_COUNT = 5  # Number of sensors
 # Turn timing configuration (calibrate these values)
