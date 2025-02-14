@@ -135,7 +135,7 @@ def forward_step():
 
         print(f"Sensor states: {sensor_states}")
         prev_skew = 0
-        if sensor_states in ([1, 1, 0, 1, 1], [1, 0, 0, 0, 1], [1, 0, 1, 0, 0], [0, 0, 1, 0, 1]):  # Centered on the line
+        if sensor_states in ([1, 1, 0, 1, 1], [1, 0, 0, 0, 1], [1, 0, 1, 0, 0], [0, 0, 1, 0, 1], [1, 0, 1, 0, 1]):  # Centered on the line
             forward('N')
             prev_skew = 0
         elif sensor_states in ([1, 0, 1, 1, 1], [0, 1, 1, 1, 1], [1, 0, 0, 1, 1], [0, 0, 1, 1, 1], [0, 0, 0, 1, 1], [0, 0, 0, 0, 1], [0, 1, 0, 1, 1]):  # Off to the right
