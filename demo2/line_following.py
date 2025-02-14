@@ -134,15 +134,18 @@ def forward_step():
         #sensor_states = [0 if (max_sensor_value - value) > MAXDIFF and value < THRESHOLD else 1 for value in sensor_values]
 
         print(f"Sensor states: {sensor_states}")
-
+        prev_skew = 0
         if sensor_states in ([1, 1, 0, 1, 1], [1, 0, 0, 0, 1], [1, 0, 1, 0, 0], [0, 0, 1, 0, 1]):  # Centered on the line
             forward('N')
+            prev_skew = 0
         elif sensor_states in ([1, 0, 1, 1, 1], [0, 1, 1, 1, 1], [1, 0, 0, 1, 1], [0, 0, 1, 1, 1], [0, 0, 0, 1, 1], [0, 0, 0, 0, 1], [0, 1, 0, 1, 1]):  # Off to the right
             forward('R')
+            prev_skew = 1
             if sensor_states in ([0, 1, 1, 1, 1]):
                 forward('R', 1)
         elif sensor_states in ([1, 1, 0, 0, 1], [1, 1, 1, 0, 1], [1, 1, 1, 1, 0], [1, 1, 1, 0, 0], [1, 1, 0, 0, 0], [1, 0, 0, 0, 0], [1, 1, 0, 1, 0]):  # Off to the left
             forward('L')
+            prev_skew = 2
             if sensor_states in ([1, 1, 1, 1, 0]):
                 forward('L', 1)
         elif sensor_states == [0, 0, 0, 0, 0]: #Intersection reached
@@ -152,8 +155,15 @@ def forward_step():
             return False
         else:  # forward for edge cases
             print("Line following lost")
-            turn_left()
-            time.sleep(MOVE_INTERSECTION_TIME)
+            if prev_skew == 1:
+                turn_right()
+                time.sleep(MOVE_INTERSECTION_TIME)
+            elif prev_skew == 2:
+                turn_left()
+                time.sleep(MOVE_INTERSECTION_TIME)
+            stop()
+            
+
             stop()
         time.sleep(0.1)  # Read sensor values 5 times per second (every 200 ms)
 
