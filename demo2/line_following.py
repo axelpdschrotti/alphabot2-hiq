@@ -45,10 +45,10 @@ def setup_motors():
 def forward(skew = 'N'): # skew can be none 'N', right 'R', or left 'L'
     if(skew == 'L'):
         speedLeft = 6
-        speedRight = 8
+        speedRight = 9
     elif(skew == 'R'):
         speedRight = 6
-        speedLeft = 8
+        speedLeft = 9
     else:
         speedRight = 6
         speedLeft = 6
