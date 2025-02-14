@@ -82,6 +82,7 @@ class robot:
             print("exiting program")
             return 1
         print("invalid input")
+        return 0
 
 if __name__ == "__main__":
 
@@ -107,3 +108,4 @@ if __name__ == "__main__":
         ret = r.read_input()
         if (ret == 1):
             break
+    print("Exiting...")
