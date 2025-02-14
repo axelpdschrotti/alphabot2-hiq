@@ -16,7 +16,8 @@ THRESHOLD = 300
 SENSOR_COUNT = 5  # Number of sensors
 # Turn timing configuration (calibrate these values)
 TURN_90_TIME = 1.15    # Time needed for 90° turn at current speed
-
+# Intersection timing configuration (calibrate these values)
+MOVE_INTERSECTION_TIME = 0.45    # Time needed for intersection
 
 
 speedRight = 5
@@ -41,13 +42,17 @@ def setup_motors():
     pwmB.start(speedLeft)
 
 # Move forward
-def forward(skew = 'N'): # skew can be none 'N', right 'R', or left 'L'
+def forward(skew = 'N', Hard_Skew = 0): # skew can be none 'N', right 'R', or left 'L'
     if(skew == 'L'):
         speedLeft = 6
         speedRight = 9
+        if Hard_Skew == 1:
+            speedRight = 10
     elif(skew == 'R'):
         speedRight = 6
         speedLeft = 9
+        if Hard_Skew == 1:
+            speedLeft = 10
     else:
         speedRight = 6
         speedLeft = 6
@@ -134,15 +139,24 @@ def forward_step():
             forward('N')
         elif sensor_states in ([1, 0, 1, 1, 1], [0, 1, 1, 1, 1], [1, 0, 0, 1, 1], [0, 0, 1, 1, 1], [0, 0, 0, 1, 1], [0, 0, 0, 0, 1], [0, 1, 0, 1, 1]):  # Off to the right
             forward('R')
+            if sensor_states in ([0, 1, 1, 1, 1]):
+                forward('R', 1)
         elif sensor_states in ([1, 1, 0, 0, 1], [1, 1, 1, 0, 1], [1, 1, 1, 1, 0], [1, 1, 1, 0, 0], [1, 1, 0, 0, 0], [1, 0, 0, 0, 0], [1, 1, 0, 1, 0]):  # Off to the left
             forward('L')
+            if sensor_states in ([1, 1, 1, 1, 0]):
+                forward('L', 1)
         elif sensor_states == [0, 0, 0, 0, 0]: #Intersection reached
+            time.sleep(MOVE_INTERSECTION_TIME)
             stop()
             print("We have reached an intersection")
             return False
-        else:  # Stop i f completely off the line
+        elif sensor_states == [1, 1, 1, 1, 1]: # Stop i f completely off the line
+            print("Line following lost")
+            turn_left()
+            time.sleep(MOVE_INTERSECTION_TIME)
             stop()
-
+        else:  # forward for edge cases
+             forward('N')
         time.sleep(0.1)  # Read sensor values 5 times per second (every 200 ms)
 
 # Cleanup GPIO
