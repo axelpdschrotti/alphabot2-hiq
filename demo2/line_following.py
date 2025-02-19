@@ -10,15 +10,15 @@ IN3 = 21
 IN4 = 20
 ENB = 26  # Motor B PWM
 
-# Threshold for sensor readings to determine if it's on the line
-THRESHOLD = 750
-#MAXDIFF = 200
+# Default threshold for sensor readings to determine if it's on the line.
+# This value may be recalibrated.
+THRESHOLD = 750  
 SENSOR_COUNT = 5  # Number of sensors
+
 # Turn timing configuration (calibrate these values)
 TURN_90_TIME = 0.9    # Time needed for 90° turn at current speed
 # Intersection timing configuration (calibrate these values)
 MOVE_INTERSECTION_TIME = 0.3    # Time needed for intersection
-
 
 speedRight = 5
 speedLeft = 5
@@ -38,15 +38,16 @@ def setup_motors():
     global pwmA, pwmB
     pwmA = GPIO.PWM(ENA, 50)  # PWM frequency at 50 Hz
     pwmB = GPIO.PWM(ENB, 50)
-    pwmA.start(0)  # Start with 10% speed
+    pwmA.start(0)
     pwmB.start(0)
 
 # Move forward
-def forward(skew = 'N'): # skew can be none 'N', right 'R', or left 'L'
-    if(skew == 'L'):
+def forward(skew='N'): # skew can be none 'N', right 'R', or left 'L'
+    global speedLeft, speedRight
+    if skew == 'L':
         speedLeft = 6
         speedRight = 9
-    elif(skew == 'R'):
+    elif skew == 'R':
         speedRight = 6
         speedLeft = 9
     else:
@@ -110,45 +111,103 @@ def turn_right_90():
     time.sleep(TURN_90_TIME)
     stop()
 
-
 # Function to read sensor values (replace this with your sensor reading function)
 def read_sensors(sensor):
-    """Simulates reading 5 sensor values from an array."""
+    """Reads 5 sensor values from the sensor array."""
     return sensor.AnalogRead()
+
+# --------------------- Calibration Methods ---------------------
+
+# 1. Static Midpoint Calibration:
+def calibrate_static(sensor):
+    """
+    Calibrates by taking one reading from all sensors and setting the threshold
+    as the midpoint between the minimum and maximum sensor values.
+    Assumes the robot starts with the outer sensors (white) and the center (black).
+    """
+    global THRESHOLD
+    sensor_values = read_sensors(sensor)
+    min_val = min(sensor_values)
+    max_val = max(sensor_values)
+    THRESHOLD = (min_val + max_val) // 2
+    print("Static Calibration: sensor_values =", sensor_values)
+    print("Calculated THRESHOLD =", THRESHOLD)
+
+# 2. Individual Sensor Calibration:
+def calibrate_individual(sensor):
+    """
+    Calibrates using the assumption that the center sensor sees the black line
+    and the two outer sensors see the white surface. The threshold is set as
+    the average between the center sensor reading and the average of the edge readings.
+    """
+    global THRESHOLD
+    sensor_values = read_sensors(sensor)
+    center_value = sensor_values[SENSOR_COUNT // 2]  # Middle sensor
+    edge_avg = (sensor_values[0] + sensor_values[-1]) / 2.0  # Average of first and last sensor
+    THRESHOLD = int((center_value + edge_avg) // 2)
+    print("Individual Calibration: sensor_values =", sensor_values)
+    print("Center =", center_value, "Edge average =", edge_avg)
+    print("Calculated THRESHOLD =", THRESHOLD)
+
+# 3. Multi-Sample Adaptive Calibration:
+def calibrate_multi_sample(sensor, samples=50, delay=0.05):
+    """
+    Takes multiple readings over a period and computes, for each sensor, the minimum
+    and maximum values seen. It then calculates a threshold for each sensor as the midpoint,
+    and finally sets a global threshold as the average of these midpoints.
+    """
+    global THRESHOLD
+    min_vals = [float('inf')] * SENSOR_COUNT
+    max_vals = [0] * SENSOR_COUNT
+
+    print("Starting multi-sample calibration...")
+    for i in range(samples):
+        values = read_sensors(sensor)
+        for j in range(SENSOR_COUNT):
+            if values[j] < min_vals[j]:
+                min_vals[j] = values[j]
+            if values[j] > max_vals[j]:
+                max_vals[j] = values[j]
+        time.sleep(delay)
+
+    thresholds = [(min_vals[j] + max_vals[j]) // 2 for j in range(SENSOR_COUNT)]
+    THRESHOLD = sum(thresholds) // SENSOR_COUNT
+    print("Multi-Sample Calibration:")
+    print("Min values: ", min_vals)
+    print("Max values: ", max_vals)
+    print("Individual thresholds: ", thresholds)
+    print("Calculated global THRESHOLD =", THRESHOLD)
+
+# --------------------- End Calibration Methods ---------------------
 
 # Main line-following logic
 def forward_step():
     print("Starting line-following...")
     sensor = TRSensors.TRSensor()
-    max_value = 0
     while True:
         sensor_values = read_sensors(sensor)
         print(f"Sensor values: {sensor_values}")
-        #max_sensor_value = max(sensor_values)
         # Determine sensor states (0 = on the line, 1 = off the line)
         sensor_states = [1 if value > THRESHOLD else 0 for value in sensor_values]
-        #sensor_states = [0 if (max_sensor_value - value) > MAXDIFF and value < THRESHOLD else 1 for value in sensor_values]
-
         print(f"Sensor states: {sensor_states}")
-        prev_skew = 0
-        if sensor_states in ([1, 1, 0, 1, 1], [1, 0, 0, 0, 1], [1, 0, 1, 0, 0], [0, 0, 1, 0, 1], [1, 0, 1, 0, 1]):  # Centered on the line
+
+        if sensor_states in ([1, 1, 0, 1, 1], [1, 0, 0, 0, 1], [1, 0, 1, 0, 0], [0, 0, 1, 0, 1], [1, 0, 1, 0, 1]):  
             forward('N')
-            prev_skew = 0
-        elif sensor_states in ([1, 0, 1, 1, 1], [0, 1, 1, 1, 1], [1, 0, 0, 1, 1], [0, 0, 1, 1, 1], [0, 0, 0, 1, 1], [0, 0, 0, 0, 1], [0, 1, 0, 1, 1]):  # Off to the right
+        elif sensor_states in ([1, 0, 1, 1, 1], [0, 1, 1, 1, 1], [1, 0, 0, 1, 1], [0, 0, 1, 1, 1], 
+                               [0, 0, 0, 1, 1], [0, 0, 0, 0, 1], [0, 1, 0, 1, 1]):  
             forward('R')
-            prev_skew = 1
-        elif sensor_states in ([1, 1, 0, 0, 1], [1, 1, 1, 0, 1], [1, 1, 1, 1, 0], [1, 1, 1, 0, 0], [1, 1, 0, 0, 0], [1, 0, 0, 0, 0], [1, 1, 0, 1, 0]):  # Off to the left
+        elif sensor_states in ([1, 1, 0, 0, 1], [1, 1, 1, 0, 1], [1, 1, 1, 1, 0], [1, 1, 1, 0, 0],
+                               [1, 1, 0, 0, 0], [1, 0, 0, 0, 0], [1, 1, 0, 1, 0]):  
             forward('L')
-            prev_skew = 2
-        elif sensor_states == [0, 0, 0, 0, 0]: #Intersection reached
+        elif sensor_states == [0, 0, 0, 0, 0]:  # Intersection reached
             time.sleep(MOVE_INTERSECTION_TIME)
             stop()
             print("We have reached an intersection")
-            return False
-        else:  # forward for edge cases
-            print("Line following lost")       
+            return
+        else:
+            print("Line following lost")
             stop()
-        time.sleep(0.1)  # Read sensor values 5 times per second (every 200 ms)
+        time.sleep(0.1)
 
 # Cleanup GPIO
 def cleanup():
@@ -158,6 +217,19 @@ def cleanup():
 if __name__ == "__main__":
     try:
         setup_motors()
+        sensor = TRSensors.TRSensor()
+        
+        # --- Choose one calibration method before starting ---
+        # Option 1: Static Midpoint Calibration
+        calibrate_static(sensor)
+        
+        # Option 2: Individual Sensor Calibration
+        # calibrate_individual(sensor)
+        
+        # Option 3: Multi-Sample Adaptive Calibration
+        # calibrate_multi_sample(sensor)
+        # -------------------------------------------------------
+        
         forward_step()
         turn_right_90()
         forward_step()
