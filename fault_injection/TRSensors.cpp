@@ -11,7 +11,7 @@
 #define BUTTON 7
 #define ADDR_SIZE 8
 
-class TRSensor {
+public class TRSensor {
     int numSensors;
     int lastValue;
 
