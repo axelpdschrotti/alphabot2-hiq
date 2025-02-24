@@ -6,7 +6,7 @@
 
 #define CS 5
 #define CLOCK 25
-#define ADDRESS 24
+#define ADDRESS 0
 #define DATAOUT 23
 #define BUTTON 7
 #define ADDR_SIZE 8
@@ -29,9 +29,9 @@ public:
         gpioSetMode(CLOCK, PI_OUTPUT);
         gpioSetMode(ADDRESS, PI_OUTPUT);
         gpioSetMode(DATAOUT, PI_INPUT);
+        gpioSetMode(BUTTON, PI_INPUT);
 
         gpioSetPullUpDown(DATAOUT, PI_PUD_UP);
-        gpioSetMode(BUTTON, PI_INPUT);
         gpioSetPullUpDown(BUTTON, PI_PUD_UP);
     }
 
@@ -63,7 +63,7 @@ public:
                 gpioWrite(CLOCK, 0);
             }
 
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
             gpioWrite(CS, 1);
         }
 
