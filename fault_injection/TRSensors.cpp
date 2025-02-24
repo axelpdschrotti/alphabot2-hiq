@@ -67,7 +67,7 @@ public:
             gpioWrite(CS, 1);
         }
 
-        for (int i = 0; i < numSensors; i++) {
+        for (int i = 0; i < 6; i++) {
             value[i] >>= 2;
         }
 
