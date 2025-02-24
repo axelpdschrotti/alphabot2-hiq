@@ -100,7 +100,6 @@ if __name__ == "__main__":
             print("Invalid input. Please enter a valid integer.")
     
     line_following.setup_motors()
-    line_following.calibrate_static()
 
     r = robot(gridX, gridY)
     print("To place robot, type 'PLACE, <valid X coordinate>, <valid Y coordinate>, <valid direction, in CAPITAL LETTERS>'")
