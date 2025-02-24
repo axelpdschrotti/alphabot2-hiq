@@ -4,12 +4,12 @@
 #include <chrono>
 #include <vector>
 
-#define CS 5         // Chip Select
-#define CLOCK 25     // Clock Signal
-#define ADDRESS 24   // Address Line
-#define DATAOUT 23   // Data Out (Sensor readings)
-#define BUTTON 7     // Button Input
-#define ADDR_SIZE 4  // Number of address bits (adjust if needed)
+#define CS 5
+#define CLOCK 25
+#define ADDRESS 24
+#define DATAOUT 23
+#define BUTTON 7
+#define ADDR_SIZE 1
 
 class TRSensor {
 public:
