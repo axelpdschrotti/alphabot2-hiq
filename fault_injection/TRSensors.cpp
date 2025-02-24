@@ -44,30 +44,38 @@ public:
     std::vector<int> analogRead() {
         std::vector<int> value(numSensors, 0);
 
+        gpioWrite(CS, 0);
         for (int i = 0; i < numSensors; i++) {
             gpioWrite(CS, 0);
 
             for (int j = 0; j < ADDR_SIZE; j++) {
-                if (j < 4) {
-                    gpioWrite(ADDRESS, ((i >> (3 - j)) & 0x01));
-                } else {
-                    gpioWrite(ADDRESS, 0);
-                }
-
+                // if (j < 4) {
+                //     gpioWrite(ADDRESS, ((i >> (3 - j)) & 0x01));
+                // } else {
+                //     gpioWrite(ADDRESS, 0);
+                // }
+                
+                gpioWrite(ADDRESS, (j < 4) ? ((i >> (3 - j)) & 0x01) : 0);
+                
+                gpioWrite(CLOCK, 0); // Ensure clock is low before reading
+                std::this_thread::sleep_for(std::chrono::microseconds(10)); // Small delay
+                
+                gpioWrite(CLOCK, 1); // Pulse clock
+                std::this_thread::sleep_for(std::chrono::microseconds(10)); // Small delay
+                
                 value[i] <<= 1;
                 if (gpioRead(DATAOUT)) {
                     value[i] |= 0x01;
                 }
 
-                gpioWrite(CLOCK, 1);
                 gpioWrite(CLOCK, 0);
             }
 
-            std::this_thread::sleep_for(std::chrono::milliseconds(500));
-            gpioWrite(CS, 1);
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }
+        gpioWrite(CS, 1);
 
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < numSensors; i++) {
             value[i] >>= 2;
         }
 
