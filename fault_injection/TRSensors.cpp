@@ -20,16 +20,19 @@ public:
     TRSensor(int sensors) {
         if (gpioInitialise() < 0) {
             std::cerr << "Error initializing pigpio!" << std::endl;
-            exit(1); // Use exit() instead of return
+            exit(1);
         }
         numSensors = sensors;
         lastValue = 0;
 
-        // Set GPIO modes
         gpioSetMode(CS, PI_OUTPUT);
         gpioSetMode(CLOCK, PI_OUTPUT);
         gpioSetMode(ADDRESS, PI_OUTPUT);
         gpioSetMode(DATAOUT, PI_INPUT);
+
+        gpioSetPullUpDown(DATAOUT, PI_PUD_UP);
+        gpioSetMode(BUTTON, PI_INPUT);
+        gpioSetPullUpDown(BUTTON, PI_PUD_UP);
     }
 
     // Destructor
@@ -41,10 +44,10 @@ public:
     std::vector<int> analogRead() {
         std::vector<int> value(numSensors, 0);
 
-        for (int i = 0; i < numSensors; i++) {  // Fixed loop condition
-            gpioWrite(CS, 0);  // Start communication
+        for (int i = 0; i < numSensors; i++) {
+            gpioWrite(CS, 0);
 
-            for (int j = 0; j < ADDR_SIZE; j++) {  // Fixed loop variable
+            for (int j = 0; j < ADDR_SIZE; j++) {
                 if (j < 4) {
                     gpioWrite(ADDRESS, ((i >> (3 - j)) & 0x01));
                 } else {
@@ -60,11 +63,10 @@ public:
                 gpioWrite(CLOCK, 0);
             }
 
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));  // Fixed sleep syntax
-            gpioWrite(CS, 1);  // Stop communication
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            gpioWrite(CS, 1);
         }
 
-        // Right-shift values
         for (int i = 0; i < numSensors; i++) {
             value[i] >>= 2;
         }
@@ -80,13 +82,13 @@ int main() {
     while (true) {
         std::vector<int> s = sensor.analogRead();
 
-        for (int i = 0; i < numSensors; i++) {  // Fixed loop condition
+        for (int i = 0; i < numSensors; i++) {
             std::cout << s[i] << ", ";
         }
 
-        std::cout << std::endl;  // Fixed std::endl usage
+        std::cout << std::endl;
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));  // 500ms delay
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
     }
 
     return 0;
