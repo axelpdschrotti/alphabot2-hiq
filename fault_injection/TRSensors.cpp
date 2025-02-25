@@ -1,4 +1,4 @@
-#include <TRSensors.hpp>
+#include "TRSensors.hpp"
 
 // Define GPIO pins
 const int CS = 5;

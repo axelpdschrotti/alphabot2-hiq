@@ -8,8 +8,8 @@
 #include <deque>
 #include <fstream>
 #include <iomanip>
-#include <SensorLagSimulator.hpp>
-#include <TRSensors.hpp>
+#include "SensorLagSimulator.hpp"
+#include "TRSensors.hpp"
 
 // Class to detect anomalies in sensor readings
 class SensorAnomalyDetector {
