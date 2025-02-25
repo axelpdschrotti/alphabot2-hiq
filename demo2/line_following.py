@@ -11,7 +11,6 @@ IN4 = 20
 ENB = 26  # Motor B PWM
 
 # Default threshold for sensor readings to determine if it's on the line.
-# This value may be recalibrated.
 THRESHOLD = 750  
 SENSOR_COUNT = 5  # Number of sensors
 
@@ -42,7 +41,7 @@ def setup_motors():
     pwmB.start(0)
 
 # Move forward
-def forward(skew='N'): # skew can be none 'N', right 'R', or left 'L'
+def forward(skew='N'): # skew can be 'N' (none), 'R' (right), or 'L' (left)
     global speedLeft, speedRight
     if skew == 'L':
         speedLeft = 6
@@ -184,6 +183,7 @@ def calibrate_multi_sample(sensor, samples=50, delay=0.05):
 def forward_step():
     print("Starting line-following...")
     sensor = TRSensors.TRSensor()
+    calibrate_individual(sensor) # Calibrate the sensors before starting
     while True:
         sensor_values = read_sensors(sensor)
         print(f"Sensor values: {sensor_values}")
@@ -230,10 +230,12 @@ if __name__ == "__main__":
         # calibrate_multi_sample(sensor)
         # -------------------------------------------------------
         
+        # Print the final threshold value calculated during calibration
+        print("Final THRESHOLD value for line detection:", THRESHOLD)
+        
         forward_step()
         turn_right_90()
         forward_step()
     except KeyboardInterrupt:
         print("Line-following interrupted. Stopping...")
         cleanup()
-    
