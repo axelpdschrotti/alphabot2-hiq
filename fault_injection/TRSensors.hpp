@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <chrono>
 #include <thread>
+#include "SensorLagSimulator.hpp"
 
 class EnhancedSensorSimulator;
 
