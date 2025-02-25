@@ -1,7 +1,4 @@
-#include <queue>
-#include <vector>
-#include <random>
-#include <chrono>
+#include <SensorLagSimulator.hpp>
 
 class EnhancedSensorSimulator {
 private:

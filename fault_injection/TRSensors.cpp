@@ -1,9 +1,4 @@
-#include <iostream>
-#include <pigpio.h>
-#include <vector>
-#include <algorithm>
-#include <chrono>
-#include <thread>
+#include <TRSensors.hpp>
 
 // Define GPIO pins
 const int CS = 5;
