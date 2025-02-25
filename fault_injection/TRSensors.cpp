@@ -9,7 +9,7 @@
 #define ADDRESS 24
 #define DATAOUT 23
 #define BUTTON 7
-#define ADDR_SIZE 2
+#define ADDR_SIZE 5
 
 class TRSensor {
 public:
@@ -75,9 +75,8 @@ public:
         gpioWrite(CS, 1);  // Deactivate Chip Select
 
         // Debug: Print the raw sensor values
-        std::cout << "Sensor Readings: ";
         for (int i = 0; i < numSensors; i++) {
-            std::cout << "S" << i << ":" << value[i] << " ";
+            std::cout << "IR" << (i + 1) << ":" << value[i] << " ";
         }
         std::cout << std::endl;
 
