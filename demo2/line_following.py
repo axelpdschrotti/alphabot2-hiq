@@ -183,7 +183,7 @@ def calibrate_multi_sample(sensor, samples=50, delay=0.05):
 def forward_step():
     print("Starting line-following...")
     sensor = TRSensors.TRSensor()
-    calibrate_static(sensor) # Calibrate the sensors before starting
+    calibrate_individual(sensor) # Calibrate the sensors before starting
     while True:
         sensor_values = read_sensors(sensor)
         print(f"Sensor values: {sensor_values}")
