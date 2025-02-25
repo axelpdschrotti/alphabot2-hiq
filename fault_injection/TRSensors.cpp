@@ -29,17 +29,16 @@ TRSensor::TRSensor(int numSensors) : numSensors(numSensors), last_value(0), sens
 }
 
 TRSensor::~TRSensor() {
-    delete sensorSimulator;
     gpioTerminate();
 }
 
 void TRSensor::enableSensorSimulation(int sensorIndex, int baseLag, int lagVariability) {
-    sensorSimulator = new EnhancedSensorSimulator(sensorIndex, baseLag, lagVariability);
+    sensorSimulator = new EnhancedSensorSimulator(sensorIndex, baseLag, lagVariability, 500);
 }
 
 void TRSensor::enableIntermittentFailures(bool enable, double rate, int duration, int failureValue) {
     if (sensorSimulator) {
-        sensorSimulator->setFailureParameters(enable, rate, duration, failureValue);
+        sensorSimulator->setFailureParameters(enable, rate, duration, failureValue, 500);
     }
 }
 
