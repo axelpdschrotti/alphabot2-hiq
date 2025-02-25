@@ -18,9 +18,10 @@ private:
     std::vector<int> calibratedMin;
     std::vector<int> calibratedMax;
     int last_value;
+    EnhancedSensorSimulator* sensorSimulator;
 
 public:
-    TRSensor(int numSensors = 5) : numSensors(numSensors), last_value(0) {
+    TRSensor(int numSensors = 5) : numSensors(numSensors), last_value(0), sensorSimulator(nullptr) {
         // Initialize calibration values
         calibratedMin.resize(numSensors, 0);
         calibratedMax.resize(numSensors, 1023);
@@ -41,8 +42,33 @@ public:
         gpioSetPullUpDown(Button, PI_PUD_UP);
     }
 
+    
     ~TRSensor() {
+        delete sensorSimulator;
         gpioTerminate();
+    }
+    
+    // Enable sensor simulation with lag and optional failures
+    void enableSensorSimulation(int sensorIndex, int baseLag, int lagVariability = 0) {
+        if (sensorSimulator) {
+            delete sensorSimulator;
+        }
+        sensorSimulator = new EnhancedSensorSimulator(sensorIndex, baseLag, lagVariability);
+    }
+    
+    // Enable intermittent failures for the simulated sensor
+    void enableIntermittentFailures(bool enable, double rate = 0.05, int duration = 3, int failureValue = 0) {
+        if (sensorSimulator) {
+            sensorSimulator->setFailureParameters(enable, rate, duration, failureValue);
+        }
+    }
+    
+    // Disable all sensor simulation
+    void disableSensorSimulation() {
+        if (sensorSimulator) {
+            delete sensorSimulator;
+            sensorSimulator = nullptr;
+        }
     }
 
     // Read analog values from all sensors
@@ -73,7 +99,7 @@ public:
                 gpioWrite(Clock, PI_HIGH);
                 gpioWrite(Clock, PI_LOW);
             }
-            
+
             for (int i = 0; i < 4; i++) {
                 // Read LSB 8-bit data
                 values[j] <<= 1;
@@ -83,19 +109,25 @@ public:
                 gpioWrite(Clock, PI_HIGH);
                 gpioWrite(Clock, PI_LOW);
             }
-            
+
             // Short delay
             std::this_thread::sleep_for(std::chrono::microseconds(100));
             gpioWrite(CS, PI_HIGH);
         }
-        
+
         // Right shift values by 2
         for (int i = 0; i < 6; i++) {
             values[i] >>= 2;
         }
-        
+
+        // Apply simulation effects if enabled
+        if (sensorSimulator) {
+            values = sensorSimulator->processReadings(values);
+        }
+
         // Return values[1:] (equivalent to Python's array slicing)
         std::vector<int> result(values.begin() + 1, values.end());
+
         return result;
     }
 
