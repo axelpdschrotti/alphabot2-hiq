@@ -34,9 +34,6 @@ TRSensor::~TRSensor() {
 }
 
 void TRSensor::enableSensorSimulation(int sensorIndex, int baseLag, int lagVariability) {
-    if (sensorSimulator) {
-        delete sensorSimulator;
-    }
     sensorSimulator = new EnhancedSensorSimulator(sensorIndex, baseLag, lagVariability);
 }
 
@@ -48,7 +45,6 @@ void TRSensor::enableIntermittentFailures(bool enable, double rate, int duration
 
 void TRSensor::disableSensorSimulation() {
     if (sensorSimulator) {
-        delete sensorSimulator;
         sensorSimulator = nullptr;
     }
 }
