@@ -8,6 +8,8 @@
 #include <chrono>
 #include <thread>
 
+class EnhancedSensorSimulator;
+
 class TRSensor {
 private:
     int numSensors;
