@@ -203,30 +203,30 @@ std::pair<int, std::vector<int>> TRSensor::readLine(bool white_line) {
     return std::make_pair(last_value, sensor_values);
 }
 
-// Main example function
-int main() {
-    TRSensor TR;
-    std::cout << "TRSensor Example" << std::endl;
+// // Main example function
+// int main() {
+//     TRSensor TR;
+//     std::cout << "TRSensor Example" << std::endl;
     
-    try {
-        while (true) {
-            std::vector<int> values = TR.AnalogRead();
+//     try {
+//         while (true) {
+//             std::vector<int> values = TR.AnalogRead();
             
-            std::cout << "Sensor values: ";
-            for (size_t i = 0; i < values.size(); i++) {
-                std::cout << values[i];
-                if (i < values.size() - 1) {
-                    std::cout << ", ";
-                }
-            }
-            std::cout << std::endl;
+//             std::cout << "Sensor values: ";
+//             for (size_t i = 0; i < values.size(); i++) {
+//                 std::cout << values[i];
+//                 if (i < values.size() - 1) {
+//                     std::cout << ", ";
+//                 }
+//             }
+//             std::cout << std::endl;
             
-            std::this_thread::sleep_for(std::chrono::milliseconds(200));
-        }
-    } catch (const std::exception& e) {
-        std::cerr << "Error: " << e.what() << std::endl;
-        return 1;
-    }
+//             std::this_thread::sleep_for(std::chrono::milliseconds(200));
+//         }
+//     } catch (const std::exception& e) {
+//         std::cerr << "Error: " << e.what() << std::endl;
+//         return 1;
+//     }
     
-    return 0;
-}
+//     return 0;
+// }
