@@ -33,12 +33,12 @@ TRSensor::~TRSensor() {
 }
 
 void TRSensor::enableSensorSimulation(int sensorIndex, int baseLag, int lagVariability) {
-    sensorSimulator = new EnhancedSensorSimulator(sensorIndex, baseLag, lagVariability, 500);
+    sensorSimulator = new EnhancedSensorSimulator(sensorIndex, baseLag, lagVariability);
 }
 
 void TRSensor::enableIntermittentFailures(bool enable, double rate, int duration, int failureValue) {
     if (sensorSimulator) {
-        sensorSimulator->setFailureParameters(enable, rate, duration, failureValue, 500);
+        sensorSimulator->setFailureParameters(enable, rate, duration, failureValue);
     }
 }
 
