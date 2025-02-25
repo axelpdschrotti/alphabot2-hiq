@@ -9,7 +9,7 @@
 #define ADDRESS 24
 #define DATAOUT 23
 #define BUTTON 7
-#define ADDR_SIZE 1
+#define ADDR_SIZE 2
 
 class TRSensor {
 public:
@@ -93,28 +93,8 @@ int main() {
         std::vector<int> readings = sensor.analogRead();
 
         // Check if values change independently when a sensor is touched
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
     }
 
     return 0;
 }
-
-
-// int main() {
-//     int numSensors = 5;
-//     TRSensor sensor(numSensors);
-
-//     while (true) {
-//         std::vector<int> s = sensor.analogRead();
-
-//         for (int i = 0; i < numSensors; i++) {
-//             std::cout << s[i] << ", ";
-//         }
-
-//         std::cout << std::endl;
-
-//         std::this_thread::sleep_for(std::chrono::milliseconds(500));
-//     }
-
-//     return 0;
-// }
