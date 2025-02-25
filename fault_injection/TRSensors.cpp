@@ -48,7 +48,6 @@ void TRSensor::enableIntermittentFailures(bool enable, double rate, int duration
 
 void TRSensor::disableSensorSimulation() {
     if (sensorSimulator) {
-        delete sensorSimulator;
         sensorSimulator = nullptr;
     }
 }
