@@ -263,7 +263,7 @@ def recover_line_zigzag():
 
 # Choose which recovery method to use:
 # Set recovery_method = 'simple', 'spin', or 'zigzag'
-recovery_method = 'simple'
+recovery_method = 'spin'
 
 def recover_line():
     print("Line lost. Initiating recovery routine using method:", recovery_method)
