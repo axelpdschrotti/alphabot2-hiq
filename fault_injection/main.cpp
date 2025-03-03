@@ -41,7 +41,7 @@ int main() {
 
     std::thread t1(printSensorData, sensor1, "sensor1_data.txt");
     std::thread t2(printSensorData, sensor2, "sensor2_data.txt");
-    t1.join():
+    t1.join();
     t2.join();
 
     return 0;
