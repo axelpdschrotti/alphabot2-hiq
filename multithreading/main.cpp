@@ -9,7 +9,7 @@
 #include <deque>
 #include <fstream>
 #include <iomanip>
-#include "../sensor_adaptation/TRSensors.hpp"
+#include "TRSensors.hpp"
 
 void printSensorData(TRSensor sensor, std::string filename) {
 
