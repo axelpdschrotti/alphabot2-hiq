@@ -9,7 +9,7 @@
 #include <fstream>
 #include <iomanip>
 #include "SensorLagSimulator.hpp"
-#include "TRSensors.hpp"
+#include "../sensor_adaptation/TRSensors.hpp"
 
 // Class to detect anomalies in sensor readings
 class SensorAnomalyDetector {
