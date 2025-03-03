@@ -66,7 +66,7 @@ std::vector<int> TRSensor::AnalogRead() {
             } else {
                 gpioWrite(Address, PI_LOW);
             }
-            
+
             // Read MSB 4-bit data
             values[j] <<= 1;
             if (gpioRead(DataOut)) {
@@ -110,16 +110,16 @@ std::vector<int> TRSensor::AnalogRead() {
 void TRSensor::calibrate() {
     std::vector<int> max_sensor_values(numSensors, 0);
     std::vector<int> min_sensor_values(numSensors, 0);
-    
+
     for (int j = 0; j < 10; j++) {
         std::vector<int> sensor_values = AnalogRead();
-        
+
         for (int i = 0; i < numSensors; i++) {
             // Set the max we found THIS time
             if ((j == 0) || max_sensor_values[i] < sensor_values[i]) {
                 max_sensor_values[i] = sensor_values[i];
             }
-            
+
             // Set the min we found THIS time
             if ((j == 0) || min_sensor_values[i] > sensor_values[i]) {
                 min_sensor_values[i] = sensor_values[i];
@@ -141,24 +141,24 @@ void TRSensor::calibrate() {
 std::vector<int> TRSensor::readCalibrated() {
     // Read the needed values
     std::vector<int> sensor_values = AnalogRead();
-    
+
     for (int i = 0; i < numSensors; i++) {
         int denominator = calibratedMax[i] - calibratedMin[i];
         int value = 0;
-        
+
         if (denominator != 0) {
             value = (sensor_values[i] - calibratedMin[i]) * 1000 / denominator;
         }
-        
+
         if (value < 0) {
             value = 0;
         } else if (value > 1000) {
             value = 1000;
         }
-        
+
         sensor_values[i] = value;
     }
-    
+
     return sensor_values;
 }
 
@@ -167,19 +167,19 @@ std::pair<int, std::vector<int>> TRSensor::readLine(bool white_line) {
     int avg = 0;
     int sum = 0;
     bool on_line = false;
-    
+
     for (int i = 0; i < numSensors; i++) {
         int value = sensor_values[i];
-        
+
         if (white_line) {
             value = 1000 - value;
         }
-        
+
         // Keep track of whether we see the line at all
         if (value > 200) {
             on_line = true;
         }
-        
+
         // Only average in values that are above a noise threshold
         if (value > 50) {
             avg += value * (i * 1000);  // This is for the weighted total
@@ -202,31 +202,3 @@ std::pair<int, std::vector<int>> TRSensor::readLine(bool white_line) {
     
     return std::make_pair(last_value, sensor_values);
 }
-
-// // Main example function
-// int main() {
-//     TRSensor TR;
-//     std::cout << "TRSensor Example" << std::endl;
-    
-//     try {
-//         while (true) {
-//             std::vector<int> values = TR.AnalogRead();
-            
-//             std::cout << "Sensor values: ";
-//             for (size_t i = 0; i < values.size(); i++) {
-//                 std::cout << values[i];
-//                 if (i < values.size() - 1) {
-//                     std::cout << ", ";
-//                 }
-//             }
-//             std::cout << std::endl;
-            
-//             std::this_thread::sleep_for(std::chrono::milliseconds(200));
-//         }
-//     } catch (const std::exception& e) {
-//         std::cerr << "Error: " << e.what() << std::endl;
-//         return 1;
-//     }
-    
-//     return 0;
-// }
