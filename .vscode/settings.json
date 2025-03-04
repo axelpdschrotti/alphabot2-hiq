@@ -2,6 +2,7 @@
     "files.associations": {
         "iostream": "cpp",
         "thread": "cpp",
-        "xstring": "cpp"
+        "xstring": "cpp",
+        "mutex": "cpp"
     }
 }

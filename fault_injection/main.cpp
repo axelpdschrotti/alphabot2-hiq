@@ -20,7 +20,7 @@ void printSensorData(TRSensor sensor, std::string filename) {
     std::ofstream(myfile);
     myfile.open(filename);
     while(true) {
-        sensorData = sensor.AnalogRead();
+        sensorData = sensor.safeAnalogRead();
         time(&timestamp);
         myfile << timestamp << ": ";
         for (int value : sensorData) {
@@ -377,7 +377,7 @@ int main() {
 //         // Main control loop
 //         for (int i = 0; i < 500; i++) {  // Run for 500 cycles (or until interrupted)
 //             // Read sensors
-//             std::vector<int> rawReadings = sensor.AnalogRead();
+//             std::vector<int> rawReadings = sensor.safeAnalogRead();
             
 //             // Process raw readings for anomaly detection
 //             detector.processReadings(rawReadings);
