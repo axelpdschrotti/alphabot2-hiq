@@ -178,6 +178,23 @@ def calibrate_multi_sample(sensor, samples=50, delay=0.05):
     print("Individual thresholds: ", thresholds)
     print("Calculated global THRESHOLD =", THRESHOLD)
 
+# --------------------- Light Detection ---------------------
+def detect_light_change(sensor, baseline, light_threshold=300):
+    """
+    Detects significant changes in light conditions using IR sensors.
+    
+    :param sensor: The TRSensor object.
+    :param baseline: The initial baseline readings from the sensors.
+    :param light_threshold: The difference required to detect a light change.
+    :return: True if a sudden light change is detected, otherwise False.
+    """
+    sensor_values = read_sensors(sensor)
+    for i in range(SENSOR_COUNT):
+        if sensor_values[i] - baseline[i] > light_threshold:
+            print(f"Light change detected on sensor {i}: {sensor_values[i]} (Baseline: {baseline[i]})")
+            return True  # Light change detected
+    return False  # No significant change
+
 # --------------------- Recovery Methods ---------------------
 def recover_line_simple():
     """
@@ -198,8 +215,7 @@ def recover_line_simple():
         slight_left()
         time.sleep(0.1)
         slight_right()
-    # After recovery attempt, let the main loop try to read sensors again.
-    
+
 def recover_line_spin():
     """
     Recovery by slowly spinning in place to search for the line.
@@ -210,7 +226,6 @@ def recover_line_spin():
     print("Attempting spinning recovery. Last known direction:", last_line_direction)
     start_time = time.time()
     timeout = 3  # seconds
-    # Decide spin direction based on last known: default to left if unknown.
     if last_line_direction == 'R':
         spin_direction = 'R'
     else:
@@ -221,7 +236,6 @@ def recover_line_spin():
             slight_left()
         else:
             slight_right()
-        # Check sensors after each slight pivot.
         sensor_values = read_sensors(TRSensors.TRSensor())
         sensor_states = [1 if value > THRESHOLD else 0 for value in sensor_values]
         print("Spin recovery sensor states:", sensor_states)
@@ -237,11 +251,9 @@ def recover_line_zigzag():
     """
     print("Attempting zig-zag recovery.")
     for i in range(3):
-        # Move forward a bit
         forward()
         time.sleep(0.3)
         stop()
-        # Check sensors
         sensor_values = read_sensors(TRSensors.TRSensor())
         sensor_states = [1 if value > THRESHOLD else 0 for value in sensor_values]
         if 0 in sensor_states:
@@ -276,19 +288,30 @@ def recover_line():
     else:
         print("No valid recovery method specified.")
 
-# --------------------- Main Line-Following Logic ---------------------
+# --------------------- Main Line-Following Logic with Light Detection ---------------------
 def forward_step():
-    print("Starting line-following...")
+    print("Starting line-following with light detection...")
     sensor = TRSensors.TRSensor()
     calibrate_static(sensor)  # Calibrate the sensors before starting
+
+    # Take an initial baseline reading in normal conditions
+    baseline = read_sensors(sensor)
+
     while True:
         sensor_values = read_sensors(sensor)
         print(f"Sensor values: {sensor_values}")
+
+        # Detect sudden changes in light conditions
+        if detect_light_change(sensor, baseline):
+            print("Flashlight or strong light source detected! Recalibrating for new light conditions...")
+            calibrate_static(sensor)
+            # Update the baseline with the new calibration
+            baseline = read_sensors(sensor)
+        
         # Determine sensor states (0 = on the line, 1 = off the line)
         sensor_states = [1 if value > THRESHOLD else 0 for value in sensor_values]
         print(f"Sensor states: {sensor_states}")
 
-        # Normal line following conditions (customize these as needed)
         if sensor_states in ([1, 1, 0, 1, 1], [1, 0, 0, 0, 1], [1, 0, 1, 0, 0], [0, 0, 1, 0, 1], [1, 0, 1, 0, 1]):
             forward('N')
         elif sensor_states in ([1, 0, 1, 1, 1], [0, 1, 1, 1, 1], [1, 0, 0, 1, 1], [0, 0, 1, 1, 1],
