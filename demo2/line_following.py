@@ -255,20 +255,12 @@ def recover_line_zigzag():
             return
     print("Zig-zag recovery did not find the line.")
 
-# Choose which recovery method to use:
-# Set recovery_method = 'simple', 'spin', or 'zigzag'
-recovery_method = 'spin'
-
 def recover_line():
-    print("Line lost. Initiating recovery routine using method:", recovery_method)
-    if recovery_method == 'simple':
-        recover_line_simple()
-    elif recovery_method == 'spin':
-        recover_line_spin()
-    elif recovery_method == 'zigzag':
-        recover_line_zigzag()
-    else:
-        print("No valid recovery method specified.")
+    """
+    Always use the simple recovery method.
+    """
+    print("Line lost. Initiating simple recovery routine.")
+    recover_line_simple()
 
 # --------------------- Main Line-Following Logic ---------------------
 def forward_step():
