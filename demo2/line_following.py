@@ -189,10 +189,10 @@ def recover_line_simple():
     print("Attempting simple recovery. Last known direction:", last_line_direction)
     if last_line_direction == 'L':
         backward()
-        slight_left()
+        slight_right()
     elif last_line_direction == 'R':
         backward()
-        slight_right()
+        slight_left()
     else:
         slight_left()
         time.sleep(0.1)
