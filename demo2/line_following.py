@@ -1,3 +1,7 @@
+import RPi.GPIO as GPIO
+import time
+import TRSensors
+
 # GPIO pins for motor control
 IN1 = 13
 IN2 = 12
@@ -190,12 +194,10 @@ def recover_line_simple():
         backward()
         slight_right()
     else:
-        # If last known direction is center or unknown, try both slight pivots
         slight_left()
         time.sleep(0.1)
         slight_right()
-    # After recovery attempt, let the main loop try to read sensors again.
-    
+
 def recover_line_spin():
     """
     Recovery by slowly spinning in place to search for the line.
@@ -206,7 +208,6 @@ def recover_line_spin():
     print("Attempting spinning recovery. Last known direction:", last_line_direction)
     start_time = time.time()
     timeout = 3  # seconds
-    # Decide spin direction based on last known: default to left if unknown.
     if last_line_direction == 'R':
         spin_direction = 'R'
     else:
@@ -217,7 +218,6 @@ def recover_line_spin():
             slight_left()
         else:
             slight_right()
-        # Check sensors after each slight pivot.
         sensor_values = read_sensors(TRSensors.TRSensor())
         sensor_states = [1 if value > THRESHOLD else 0 for value in sensor_values]
         print("Spin recovery sensor states:", sensor_states)
@@ -233,11 +233,9 @@ def recover_line_zigzag():
     """
     print("Attempting zig-zag recovery.")
     for i in range(3):
-        # Move forward a bit
         forward()
         time.sleep(0.3)
         stop()
-        # Check sensors
         sensor_values = read_sensors(TRSensors.TRSensor())
         sensor_states = [1 if value > THRESHOLD else 0 for value in sensor_values]
         if 0 in sensor_states:
@@ -277,14 +275,15 @@ def forward_step():
     print("Starting line-following...")
     sensor = TRSensors.TRSensor()
     calibrate_static(sensor)  # Calibrate the sensors before starting
+
     while True:
         sensor_values = read_sensors(sensor)
         print(f"Sensor values: {sensor_values}")
+
         # Determine sensor states (0 = on the line, 1 = off the line)
         sensor_states = [1 if value > THRESHOLD else 0 for value in sensor_values]
         print(f"Sensor states: {sensor_states}")
 
-        # Normal line following conditions (customize these as needed)
         if sensor_states in ([1, 1, 0, 1, 1], [1, 0, 0, 0, 1], [1, 0, 1, 0, 0], [0, 0, 1, 0, 1], [1, 0, 1, 0, 1]):
             forward('N')
         elif sensor_states in ([1, 0, 1, 1, 1], [0, 1, 1, 1, 1], [1, 0, 0, 1, 1], [0, 0, 1, 1, 1],
