@@ -225,7 +225,7 @@ private:
                 lagCounter[sensorId]++;
                 logAnomaly(timestamp, sensorId, currentReading, baseline, stdDev, zScore, "Lag");
                 
-                std::cout << "POTENTIAL LAG DETECTED: Sensor " << sensorId 
+                std::cout << std::ctime(&timestamp) << ": POTENTIAL LAG DETECTED: Sensor " << sensorId 
                           << " showing minimal variation (" << curr << ", " << prev << ", " << prevPrev << ")" 
                           << std::endl;
             }
