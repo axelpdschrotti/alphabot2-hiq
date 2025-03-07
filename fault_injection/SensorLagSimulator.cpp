@@ -6,7 +6,7 @@ EnhancedSensorSimulator::EnhancedSensorSimulator(int sensorIndex, int baseLagAmo
       lagVariability(lagVariability),
       defaultValue(defaultValue),
       enableFailures(false),
-      failureRate(0.05),
+      failureRate(0.5),
       failureValue(-1),  // -1 could indicate using last valid reading
       currentlyFailing(false),
       failureDuration(3),

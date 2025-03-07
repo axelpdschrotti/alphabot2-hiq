@@ -227,7 +227,7 @@ private:
                 lagCounter[sensorId]++;
                 logAnomaly(timestamp, sensorId, currentReading, baseline, stdDev, zScore, "Lag");
                 
-                std::cout << std::ctime(&timestamp) << ": Sensor " << sensorId 
+                std::cout << std::ctime(&timestamp) << "Sensor " << sensorId 
                           << " possibly lagging: (" << curr << ", " << prev << ", " << prevPrev << ")" 
                           << std::endl;
             }
