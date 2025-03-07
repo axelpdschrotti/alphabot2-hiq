@@ -139,10 +139,10 @@ void TRSensor::calibrate() {
 }
 
 std::vector<int> TRSensor::safeAnalogRead() {
-    std::lock_guard<std::mutex> lock(sensorMutex);
-    sensorMutex.lock();
+    // std::lock_guard<std::mutex> lock(sensorMutex);
+    // sensorMutex.lock();
     std::vector<int> sensor_values = AnalogRead();
-    sensorMutex.unlock();
+    // sensorMutex.unlock();
     return sensor_values;
 }
 
