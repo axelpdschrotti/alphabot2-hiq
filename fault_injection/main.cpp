@@ -380,12 +380,14 @@ int main() {
             std::vector<int> rawReadings = sensor.safeAnalogRead();
             
             // Process raw readings for anomaly detection
+            std::cout << "Starting readings processing" << std::endl;
             detector.processReadings(rawReadings);
             
             // Get calibrated readings for robot control
             std::pair<int, std::vector<int>> calibratedData = sensor.readLine();
             
             // Control robot based on readings
+            std::cout << "Starting readings processing" << std::endl;
             robot.processReadings(calibratedData);
             
             // Simulate different line positions over time (for testing)
@@ -395,7 +397,7 @@ int main() {
                 // as the robot moves over the line
                 std::cout << "\n--- Simulating line position change ---\n" << std::endl;
             }
-            
+
             // Sleep to simulate processing time
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }
