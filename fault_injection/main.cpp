@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <chrono>
+#include <ctime>
 #include <thread>
 #include <algorithm>
 #include <numeric>
@@ -10,6 +11,7 @@
 #include <iomanip>
 #include "SensorLagSimulator.hpp"
 #include "TRSensors.hpp"
+#include <iomanip>
 
 // void printSensorData(TRSensor sensor, std::string filename) {
 
@@ -225,7 +227,7 @@ private:
                 lagCounter[sensorId]++;
                 logAnomaly(timestamp, sensorId, currentReading, baseline, stdDev, zScore, "Lag");
                 
-                std::cout << std::ctime(&timestamp) << ": POTENTIAL LAG DETECTED: Sensor " << sensorId 
+                std::cout << std::put_time(std::ctime(&timestamp), "%H:%M:%S") << ": Sensor " << sensorId 
                           << " showing minimal variation (" << curr << ", " << prev << ", " << prevPrev << ")" 
                           << std::endl;
             }
